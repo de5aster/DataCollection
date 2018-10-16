@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using DataCollectionService.Entities;
+using DataCollectionService.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,7 +28,7 @@ namespace DataCollection.Controllers
                         await file.CopyToAsync(stream);
                     }
 
-                    var dcs = new DataCollectionService.Services.DataCollectionProcessor();
+                    var dcs = new DataCollectionProcessor();
                     return this.Ok(dcs.DeserializeDataFromXml(filePath));
                 }
 
@@ -42,10 +41,13 @@ namespace DataCollection.Controllers
         }
 
         [HttpPost]
-        public IActionResult Save([FromBody] Data data)
+        public VirtualFileResult Save([FromBody] Data data)
         {
-            var dcs = new DataCollectionService.Services.DataCollectionProcessor();
-            return this.Ok(dcs.SerializeDataToXml(data));
+            var dcs = new DataCollectionProcessor();
+            var tempPath = dcs.SerializeDataToXml(data);
+            const string fileType = "application/xml";
+            const string fileName = "new_client_card.xml";
+            return this.File(tempPath, fileType, fileName);
         }
 
         [HttpGet]

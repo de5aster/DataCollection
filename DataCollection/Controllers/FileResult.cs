@@ -3,13 +3,11 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DataCollectionService.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DataCollection.Controllers
 {
-
     public class FileResult : IActionResult
     {
         private readonly MemoryStream fileStuff;
@@ -19,7 +17,8 @@ namespace DataCollection.Controllers
         private MemoryStream dataStream;
         private HttpRequest request;
 
-        public FileResult(MemoryStream data, HttpRequestMessage request, string filename) {
+        public FileResult(MemoryStream data, HttpRequestMessage request, string filename)
+        {
             this.fileStuff = data;
             this.httpRequestMessage = request;
             this.fileName = filename;

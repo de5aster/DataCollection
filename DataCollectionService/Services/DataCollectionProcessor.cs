@@ -7,17 +7,18 @@ namespace DataCollectionService.Services
 {
     public class DataCollectionProcessor
     {
-        private readonly string filePath = Path.GetTempFileName();
+        private readonly string tempPath = Path.GetTempPath();
 
-        public bool SerializeDataToXml(Data data)
+        public string SerializeDataToXml(Data data)
         {
             var formatter = new XmlSerializer(typeof(Data));
-            using (var fs = new FileStream(this.filePath + "data.xml", FileMode.Create))
+            var filePath = this.tempPath + "data.xml";
+            using (var fs = new FileStream(filePath, FileMode.Create))
             {
                 try
                 {
                     formatter.Serialize(fs, data);
-                    return true;
+                    return filePath;
                 }
                 catch (Exception ex)
                 {

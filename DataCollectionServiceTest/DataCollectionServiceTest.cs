@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Xml.Serialization;
 using DataCollectionService;
 using DataCollectionService.Entities;
 using DataCollectionService.Services;
@@ -30,7 +31,8 @@ namespace DataCollectionServiceTest
         [Test]
         public void SerializeDataToXmlTest()
         {
-           this.dataCollection.SerializeDataToXml(this.data).Should().BeTrue();
+            var formatter = this.dataCollection.SerializeDataToXml(this.data);
+            formatter.Should().BeOfType<string>();
         }
 
         [Test]

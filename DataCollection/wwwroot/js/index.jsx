@@ -229,6 +229,7 @@ class DataCollection extends React.Component {
                     </table>
                     <br />
                     <button onClick={this.onSaveClick}>Сохранить в файл</button>
+                    
                 </div>
             </div>
             );
