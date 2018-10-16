@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<Data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ClientName>Антон</ClientName>
+  <ClientAddress>Ekb</ClientAddress>
+  <PhoneNumber>89122221408</PhoneNumber>
+  <Email>mail@mail.ru</Email>
+  <Equipment>TV</Equipment>
+  <Breakage>Кинескоп</Breakage>
+  <MasterName>Сергей</MasterName>
+  <MasterPersonnelNumber>123434</MasterPersonnelNumber>
+  <PutDate>2018-08-08T00:00:00</PutDate>
+  <PerformData>2018-08-15T00:00:00</PerformData>
+  <WorkList>
+    <Work>
+      <MasterWork>sr</MasterWork>
+    </Work>
+    <Work>
+      <MasterWork>ass</MasterWork>
+    </Work>
+  </WorkList>
+  <RepairEquipments>
+    <RepairEquipment>
+      <RepairParts>resistor1</RepairParts>
+      <CountRepairParts>10</CountRepairParts>
+    </RepairEquipment>
+    <RepairEquipment>
+      <RepairParts>resistor2</RepairParts>
+      <CountRepairParts>15</CountRepairParts>
+    </RepairEquipment>
+  </RepairEquipments>
+</Data>

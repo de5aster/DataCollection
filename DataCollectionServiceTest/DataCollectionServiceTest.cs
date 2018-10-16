@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using DataCollectionService;
 using DataCollectionService.Entities;
 using DataCollectionService.Services;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
-
 
 namespace DataCollectionServiceTest
 {
@@ -24,32 +22,24 @@ namespace DataCollectionServiceTest
             "123434",
             new DateTime(2018, 08, 08),
             new DateTime(2018, 08, 15),
-            new Work[2]
-            {
-               new Work("sr"), 
-               new Work("ass")
-            }, 
-            new RepairEquipment[2]
-            {
-                new RepairEquipment("resistor1", 10),
-                new RepairEquipment("resistor2",15)
-            } 
-            );
+            new[] { new Work("sr"), new Work("ass") },
+            new[] { new RepairEquipment("resistor1", 10), new RepairEquipment("resistor2", 15) });
 
-        private readonly DataCollection dataCollection = new DataCollection();
-        private string path = "C:\\Users\\kalistratov\\Desktop\\Projects\\Web_develop_modul_project\\data.xml";
+        private readonly DataCollectionProcessor dataCollection = new DataCollectionProcessor();
 
         [Test]
         public void SerializeDataToXmlTest()
         {
-           dataCollection.SerializeDataToXml(data).Should().BeTrue();
+           this.dataCollection.SerializeDataToXml(this.data).Should().BeTrue();
         }
 
         [Test]
         public void DeserializeDataFromXmlTest()
         {
-            var data = dataCollection.DeserializeDataFromXml(path);
-            data.WorkList[0].MasterWork.Should().Be("sr");
+            var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers\\data.xml");
+            var dataFromXml = this.dataCollection.DeserializeDataFromXml(filePath);
+            dataFromXml.WorkList.Length.Should().Be(2);
+            dataFromXml.WorkList[0].MasterWork.Should().Be("sr");
         }
     }
 }

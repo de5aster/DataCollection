@@ -5,16 +5,15 @@ namespace DataCollectionService.Entities
     [Serializable]
     public class Work
     {
-        public string MasterWork { get; set; }
-
         public Work()
         {
         }
 
         public Work(string masterWork)
         {
-            MasterWork = masterWork;
+            this.MasterWork = masterWork;
         }
 
+        public string MasterWork { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 
-
 namespace DataCollection
 {
     public class Program
