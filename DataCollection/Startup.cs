@@ -26,7 +26,6 @@ namespace DataCollection
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
             return services.BuildServiceProvider();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

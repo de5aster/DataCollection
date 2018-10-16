@@ -31,7 +31,8 @@ namespace DataCollectionServiceTest
         [Test]
         public void SerializeDataToXmlTest()
         {
-            var formatter = this.dataCollection.SerializeDataToXml(this.data);
+            var filePath = Path.GetTempFileName();
+            var formatter = this.dataCollection.SerializeDataToXml(this.data, filePath);
             formatter.Should().BeOfType<string>();
         }
 

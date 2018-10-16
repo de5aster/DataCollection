@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using System.Xml.Serialization;
 using DataCollectionService.Entities;
 
@@ -7,12 +9,10 @@ namespace DataCollectionService.Services
 {
     public class DataCollectionProcessor
     {
-        private readonly string tempPath = Path.GetTempPath();
-
-        public string SerializeDataToXml(Data data)
+        public string SerializeDataToXml(Data data, string path)
         {
+            var filePath = path + "\\Files\\data.xml";
             var formatter = new XmlSerializer(typeof(Data));
-            var filePath = this.tempPath + "data.xml";
             using (var fs = new FileStream(filePath, FileMode.Create))
             {
                 try
