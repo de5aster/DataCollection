@@ -13,8 +13,6 @@ namespace DataCollection.Controllers
     public class DataController : Controller
     {
         private readonly IHostingEnvironment appHostingEnvironment;
-        private const string FilePathXml = "C:\\Users\\kalistratov\\Desktop\\Projects\\Web_develop_modul_project\\data.xml";
-        private const string FilePathXls = "C:\\Users\\kalistratov\\Desktop\\Projects\\Web_develop_modul_project\\struct.txt";
 
         public DataController(IHostingEnvironment appHostingEnvironment)
         {
@@ -51,24 +49,9 @@ namespace DataCollection.Controllers
         {
             var dcs = new DataCollectionProcessor();
             var tempPath = dcs.SerializeDataToXml(data, this.appHostingEnvironment.ContentRootPath);
-            var path = this.appHostingEnvironment.ContentRootPath + "\\Files\\data.xml";
             const string fileType = "application/xml";
             const string fileName = "new_client_card.xml";
             return this.PhysicalFile(tempPath, fileType, fileName);
-        }
-
-        [HttpGet]
-
-        // [Route("Home/Api/GetFile/{format}")]
-        public IActionResult SaveInUser(string format)
-        {
-            var reqFile = format.ToLower() == "xml" ? FilePathXml : (format.ToLower() == "xls" ? FilePathXls : string.Empty);
-            var fileName = "data." + format.ToLower();
-
-            var dataBytes = System.IO.File.ReadAllBytes(reqFile);
-            var dataStream = new MemoryStream(dataBytes);
-
-            return new FileResult(dataStream, this.Request, fileName);
         }
     }
 }

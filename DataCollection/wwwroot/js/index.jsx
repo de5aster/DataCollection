@@ -40,8 +40,8 @@ class HomePage extends React.Component
     onLoadClick = (e) => {
         e.preventDefault();
         this.setState(() => ({
-            loadVisible: true,
-            addVisible: false
+            addVisible: false,
+            loadVisible: true
         }));
     }
 
@@ -56,7 +56,10 @@ class HomePage extends React.Component
                     addVisible={this.state.addVisible}
                     loadVisible = {this.state.loadVisible}
                 />
-                <DataCollection addVisible={this.state.addVisible} apiUrlSave="home/api/save" />
+                <DataCollection
+                    addVisible={this.state.addVisible}
+                    apiUrlSave="home/api/save"
+                />
             </div>
             );
     }
@@ -82,7 +85,7 @@ class DataCollection extends React.Component {
                 CountRepairParts: ""
             },
             inputList:[]
-        }
+        };
     }
 
     onChangeClientName = (e) => {
@@ -148,7 +151,8 @@ class DataCollection extends React.Component {
             "MasterName": this.state.MasterName,
             "MasterPersonnelNumber": this.state.MasterPersonnelNumber,
             "PutDate": this.state.PutDate,
-            "PerformData": this.state.PerformData
+            "PerformData": this.state.PerformData,
+            "WorkList": this.state.WorkList
         });
         var xhr = new XMLHttpRequest();
         xhr.open("post", this.props.apiUrlSave, true);
@@ -240,7 +244,7 @@ class BtnGroup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            invisible: false,
+            invisible: this.props.loadVisible,
             deserializeFile: {
                 clientName: "",
                 clientAddress: "",
@@ -252,15 +256,15 @@ class BtnGroup extends React.Component {
                 masterPersonnelNumber: "",
                 putDate: "",
                 performData: "",
-                workList: {
+                workList:[ {
                     masterWork: ""
-                },
-                repairEquipments: {
+                }],
+                repairEquipments: [{
                     repairParts: "",
                     countRepairParts: ""
-                }
+                }]
             }
-        }
+        };
     }
     onChangeFile = (e) => {
 
@@ -315,60 +319,79 @@ class BtnGroup extends React.Component {
                             onChange={this.onChangeFile} />
                     </FormGroup>
                     <Button bsStyle="primary" type="submit" disabled={!this.state.file}>Загрузить</Button>
+                    <div className={"invisible" + (this.state.invisible ? "" : "_none")}>
+                        <br />
+                        <h2>Информация о клиенте</h2>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td id="tbl-lbl"><label>ФИО Заказчика: </label></td>
+                                    <td>{this.state.deserializeFile.clientName}</td>
+                                </tr>
+                                <tr>
+                                    <td> <label>Адрес проживания: </label></td>
+                                    <td> {this.state.deserializeFile.clientAddress}</td>
+                                </tr>
+                                <tr>
+                                    <td><label>Контактный телефон: </label></td>
+                                    <td>{this.state.deserializeFile.phoneNumber}</td>
+                                </tr>
+                                <tr>
+                                    <td><label>Почта: </label></td>
+                                    <td>{this.state.deserializeFile.email}</td>
+                                </tr>
+                                <tr>
+                                    <td> <label>Оборудование: </label></td>
+                                    <td>{this.state.deserializeFile.equipment}</td>
+                                </tr>
+                                <tr>
+                                    <td><label>Поломка: </label></td>
+                                    <td>{this.state.deserializeFile.breakage}</td>
+                                </tr>
+                                <tr>
+                                    <td><label>Дата сдачи оборудования: </label></td>
+                                    <td>{this.state.deserializeFile.putDate}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h2>Информация о работах</h2>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td id="tbl-lbl"><label> ФИО Мастера: </label></td>
+                                    <td>{this.state.deserializeFile.masterName}</td>
+                                </tr>
+                                <tr>
+                                    <td> <label>Табельный номер: </label></td>
+                                    <td>{this.state.deserializeFile.masterPersonnelNumber}</td>
+                                </tr>
+                                <tr>
+                                    <td><label>Дата выполения: </label></td>
+                                    <td>{this.state.deserializeFile.performData}</td>
+                                </tr>
+                                    <td>Выполненные работы: </td>
+                                    {
+                                    this.state.deserializeFile.workList.map((item,index) => {
+                                        return (
+                                            <tr>
+                                                <td>{index +1} </td>
+                                                <td>{item.masterWork}</td>
+                                            </tr>
+                                        )})}
+                                    <td>Материалы:</td>
+                                    {
+                                        this.state.deserializeFile.repairEquipments.map((item, index) => {
+                                        return (
+                                            <tr>
+                                                <td>{index + 1} </td>
+                                                <td>{item.repairParts}</td>
+                                                <td>{item.countRepairParts}</td>
+                                            </tr>
+                                        )})}
+                            </tbody>
+                        </table>
+                    </div>
                 </form>
-                <div className={"invisible" + (this.state.invisible ? "" : "_none")}>
-                    <br />
-                    <h2>Информация о клиенте</h2>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td id="tbl-lbl"><label>ФИО Заказчика: </label></td>
-                                <td>{this.state.deserializeFile.clientName}</td>
-                            </tr>
-                            <tr>
-                                <td> <label>Адрес проживания: </label></td>
-                                <td> {this.state.deserializeFile.clientAddress}</td>
-                            </tr>
-                            <tr>
-                                <td><label>Контактный телефон: </label></td>
-                                <td>{this.state.deserializeFile.phoneNumber}</td>
-                            </tr>
-                            <tr>
-                                <td><label>Почта: </label></td>
-                                <td>{this.state.deserializeFile.email}</td>
-                            </tr>
-                            <tr>
-                                <td> <label>Оборудование: </label></td>
-                                <td>{this.state.deserializeFile.equipment}</td>
-                            </tr>
-                            <tr>
-                                <td><label>Поломка: </label></td>
-                                <td>{this.state.deserializeFile.breakage}</td>
-                            </tr>
-                            <tr>
-                                <td><label>Дата сдачи оборудования: </label></td>
-                                <td>{this.state.deserializeFile.putDate}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h2>Информация о работах</h2>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td id="tbl-lbl"><label> ФИО Мастера: </label></td>
-                                <td>{this.state.deserializeFile.masterName}</td>
-                            </tr>
-                            <tr>
-                                <td> <label>Табельный номер: </label></td>
-                                <td>{this.state.deserializeFile.masterPersonnelNumber}</td>
-                            </tr>
-                            <tr>
-                                <td><label>Дата выполения: </label></td>
-                                <td>{this.state.deserializeFile.performData}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
             </div>
             );
     }
@@ -379,3 +402,19 @@ ReactDOM.render(
     <HomePage />,
     document.getElementById("content")
 );
+
+class MasterWorkLoad extends React.Component
+{
+    render() {
+        return (
+                this.props.masterWorks.map(function(work, index) {
+                return (
+                    <tr key={index}>
+                        <td>Выполненные работы:</td>
+                        <td>work</td>
+                    </tr>);
+                })
+            
+            );
+    }
+}

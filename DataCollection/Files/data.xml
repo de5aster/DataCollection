@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <Data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ClientName>Лаврищева Надежда Викторовна</ClientName>
-  <ClientAddress>Екатеринбург</ClientAddress>
-  <PhoneNumber>23498</PhoneNumber>
-  <Email>mail@mail.ru</Email>
-  <Equipment>TV</Equipment>
-  <Breakage>Display</Breakage>
-  <MasterName>Калистратов Антон Сергеевич</MasterName>
-  <MasterPersonnelNumber>623530</MasterPersonnelNumber>
+  <ClientName>sdf</ClientName>
+  <ClientAddress>sdf</ClientAddress>
+  <PhoneNumber>sdf</PhoneNumber>
+  <Email>sdf</Email>
+  <Equipment>sdf</Equipment>
+  <Breakage>sdf</Breakage>
+  <MasterName>sdf</MasterName>
+  <MasterPersonnelNumber>sdf</MasterPersonnelNumber>
   <PutDate>2018-10-15T00:00:00</PutDate>
   <PerformData>2018-10-15T00:00:00</PerformData>
+  <WorkList>
+    <Work />
+  </WorkList>
 </Data>
