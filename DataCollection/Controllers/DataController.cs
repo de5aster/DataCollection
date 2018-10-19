@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using DataCollectionService.Entities;
@@ -6,6 +7,8 @@ using DataCollectionService.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileSystemGlobbing;
+using Microsoft.Net.Http.Headers;
 
 namespace DataCollection.Controllers
 {
@@ -45,13 +48,21 @@ namespace DataCollection.Controllers
         }
 
         [HttpPost]
-        public IActionResult Save([FromBody] Data data)
+        public async Task<IActionResult> Save([FromBody] Data data)
         {
+            const string fileType = "application/xml";
+            const string fileName = "client.xml";
             var dcs = new DataCollectionProcessor();
             var tempPath = dcs.SerializeDataToXml(data, this.appHostingEnvironment.ContentRootPath);
-            const string fileType = "application/xml";
-            const string fileName = "new_client_card.xml";
-            return this.PhysicalFile(tempPath, fileType, fileName);
+            var memory = new MemoryStream();
+
+            using (var stream = new FileStream(tempPath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+
+            memory.Position = 0;
+            return this.File(memory, fileType, fileName);
         }
     }
 }

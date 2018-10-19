@@ -31,18 +31,19 @@ namespace DataCollectionServiceTest
         [Test]
         public void SerializeDataToXmlTest()
         {
-            var filePath = Path.Combine();
+            var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers");
             var formatter = this.dataCollection.SerializeDataToXml(this.data, filePath);
+            var dataFromXml = this.dataCollection.DeserializeDataFromXml(formatter);
             formatter.Should().BeOfType<string>();
+            dataFromXml.Should().BeEquivalentTo(this.data);
         }
 
         [Test]
         public void DeserializeDataFromXmlTest()
         {
-            var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers\\data.xml");
+            var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers\\Files\\data.xml");
             var dataFromXml = this.dataCollection.DeserializeDataFromXml(filePath);
-            dataFromXml.WorkList.Length.Should().Be(2);
-            dataFromXml.WorkList[0].MasterWork.Should().Be("sr");
+            dataFromXml.Should().BeEquivalentTo(this.data);
         }
     }
 }
