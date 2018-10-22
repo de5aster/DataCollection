@@ -23,7 +23,9 @@ namespace DataCollectionServiceTest
             "123434",
             new DateTime(2018, 08, 08),
             new DateTime(2018, 08, 15),
-            new[] { new Work("sr"), new Work("ass") },
+            new[] { "sr", "ass" },
+
+            // new[] { new Work("sr"), new Work("ass") },
             new[] { new RepairEquipment("resistor1", 10), new RepairEquipment("resistor2", 15) });
 
         private readonly DataCollectionProcessor dataCollection = new DataCollectionProcessor();

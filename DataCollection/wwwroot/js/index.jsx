@@ -4,18 +4,34 @@ var FormControl = ReactBootstrap.FormControl;
 var HelpBlock = ReactBootstrap.HelpBlock;
 var Button = ReactBootstrap.Button;
 
+var works = [];
+
 class MasterWork extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: ""            
+        };
+    }
+
     onChange = (e) => {
+        var val = e.target.value;
         this.setState({
-            value: e.target.value
-    });
+            value: val
+        });
+    }
+    onChangeValue = () => {
+        if ( this.state.value  != null)
+        {
+           setTimeout(this.props.updateMasterWork(this.state.value, this.props.number), 1000);
+        }
     }
 
     render() {
         return (
             <tr>
                 <td id="tbl-lbl">Выполненные работы: </td>
-                <td> <input onChange={this.onChange} id="data-label"/></td>
+                <td> <input onChange={this.onChange} onBlur={this.onChangeValue} id="data-label"/></td>
             </tr>
             );
     }
@@ -69,6 +85,7 @@ class DataCollection extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            numWorkList: 0,
             ClientName: "",
             ClientAddress: "",
             PhoneNumber: "",
@@ -80,10 +97,10 @@ class DataCollection extends React.Component {
             PutDate: "",
             PerformData: "",
             WorkList: [],
-            RepairEquipments: {
+            RepairEquipments: [{
                 RepairParts: "",
                 CountRepairParts: ""
-            },
+            }],
             inputList:[]
         };
     }
@@ -139,6 +156,17 @@ class DataCollection extends React.Component {
             PerformData : e.target.value
         });
     }
+    
+    updateMasterWork = (value, key) => {
+        if (value != null)
+        {
+            works[key] = value;
+            this.setState({
+                WorkList: works
+            });
+        }
+        
+    }
 
     onSaveClick = () => {
         var data = JSON.stringify({
@@ -159,14 +187,25 @@ class DataCollection extends React.Component {
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.send(data);
     }
+
     onAddInputClick = (e) => {
         const list = this.state.WorkList;
         this.setState({
-           WorkList: list.concat(<MasterWork key={list.length} />)
+            WorkList: list.concat(<MasterWork key={list.length}/>)
+        });
+    }
+
+    onAddMasterWork = () => {
+        this.setState({
+            numWorkList: this.state.numWorkList + 1 
         });
     }
 
     render() {
+        const workList = [];
+        for (var i = 0; i < this.state.numWorkList; i += 1) {
+            workList.push(<MasterWork key={i} number={i} updateMasterWork={this.updateMasterWork}/>);
+        }
         return (
             <div className={"invisible"+ (this.props.addVisible ? "" : "_none")}>
                 <div>
@@ -222,15 +261,14 @@ class DataCollection extends React.Component {
                         </tbody>
                     </table>
                     <h2>Выполненные работы</h2>
-                    
-                    <button onClick={this.onAddInputClick}>Добавить работу</button>
                     <table>
                         <tbody>
-                    {this.state.WorkList.map((input, index) => {
-                        return input;
-                    })}
+                            {workList}
                         </tbody>
                     </table>
+                    <br />
+                    <button onClick={this.onAddMasterWork}>Добавить работу</button>
+                    <br />
                     <br />
                     <button onClick={this.onSaveClick}>Сохранить в файл</button>
                     
@@ -256,9 +294,7 @@ class BtnGroup extends React.Component {
                 masterPersonnelNumber: "",
                 putDate: "",
                 performData: "",
-                workList:[ {
-                    masterWork: ""
-                }],
+                workList:[],
                 repairEquipments: [{
                     repairParts: "",
                     countRepairParts: ""
@@ -375,7 +411,7 @@ class BtnGroup extends React.Component {
                                         return (
                                             <tr>
                                                 <td>{index +1} </td>
-                                                <td>{item.masterWork}</td>
+                                                <td>{item}</td>
                                             </tr>
                                         )})}
                                     <td>Материалы:</td>

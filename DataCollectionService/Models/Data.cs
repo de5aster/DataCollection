@@ -9,7 +9,7 @@ namespace DataCollectionService.Entities
         {
         }
 
-        public Data(string clientName, string clientAddress, string phoneNumber, string email, string equipment, string breakage, string masterName, string masterPersonnelNumber, DateTime putDate, DateTime performData, Work[] workList, RepairEquipment[] repairEquipments)
+        public Data(string clientName, string clientAddress, string phoneNumber, string email, string equipment, string breakage, string masterName, string masterPersonnelNumber, DateTime putDate, DateTime performData, string[] workList, RepairEquipment[] repairEquipments)
         {
             this.ClientName = clientName;
             this.ClientAddress = clientAddress;
@@ -45,7 +45,7 @@ namespace DataCollectionService.Entities
 
         public DateTime PerformData { get; set; } // Дата выполнения
 
-        public Work[] WorkList { get; set; } // Выполненные работы
+        public string[] WorkList { get; set; } // Выполненные работы
 
         public RepairEquipment[] RepairEquipments { get; set; } // Затраченные материалы KeyValuePair = {Запчасть - Количество}
     }
