@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Serialization;
-using DataCollectionService.Entities;
+using DataCollectionService.Models;
 
 namespace DataCollectionService.Services
 {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Xml.Serialization;
-using DataCollectionService;
-using DataCollectionService.Entities;
+using DataCollectionService.Models;
 using DataCollectionService.Services;
 using FluentAssertions;
 using NUnit.Framework;
@@ -24,9 +22,7 @@ namespace DataCollectionServiceTest
             new DateTime(2018, 08, 08),
             new DateTime(2018, 08, 15),
             new[] { "sr", "ass" },
-
-            // new[] { new Work("sr"), new Work("ass") },
-            new[] { new RepairEquipment("resistor1", 10), new RepairEquipment("resistor2", 15) });
+            new string[][] { new string[] { "resistor1", "10" }, new string[] { "resistor2", "15" } });
 
         private readonly DataCollectionProcessor dataCollection = new DataCollectionProcessor();
 

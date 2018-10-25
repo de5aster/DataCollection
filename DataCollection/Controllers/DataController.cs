@@ -2,13 +2,11 @@
 using System.Data;
 using System.IO;
 using System.Threading.Tasks;
-using DataCollectionService.Entities;
+using DataCollectionService.Models;
 using DataCollectionService.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileSystemGlobbing;
-using Microsoft.Net.Http.Headers;
 
 namespace DataCollection.Controllers
 {

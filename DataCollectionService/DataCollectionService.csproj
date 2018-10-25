@@ -43,7 +43,6 @@
   <ItemGroup>
     <Compile Include="Models\Data.cs" />
     <Compile Include="Models\RepairEquipment.cs" />
-    <Compile Include="Models\Work.cs" />
     <Compile Include="Services\DataCollectionProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

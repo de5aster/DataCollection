@@ -5,6 +5,7 @@ var HelpBlock = ReactBootstrap.HelpBlock;
 var Button = ReactBootstrap.Button;
 
 var works = [];
+var equipments = [];
 
 class MasterWork extends React.Component {
     constructor(props) {
@@ -23,7 +24,7 @@ class MasterWork extends React.Component {
     onChangeValue = () => {
         if ( this.state.value  != null)
         {
-           setTimeout(this.props.updateMasterWork(this.state.value, this.props.number), 1000);
+           setTimeout(this.props.updateMasterWork(this.state.value, this.props.number), 50);
         }
     }
 
@@ -34,6 +35,39 @@ class MasterWork extends React.Component {
                 <td> <input onChange={this.onChange} onBlur={this.onChangeValue} id="data-label"/></td>
             </tr>
             );
+    }
+}
+
+class RepairEquipment extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: "",
+            count: 0
+        };
+    }
+    onChangeNameValue = (e) => {
+        this.setState({
+            name: e.target.value
+        });
+    }
+
+    onChangeCountValue = (e) => {
+        this.setState({
+            count: e.target.value
+        });
+    }
+    onChangeValue = () => {
+        setTimeout(this.props.updateRepairEquipment(this.state.name, this.state.count, this.props.number), 50);
+    }
+
+    render() {
+        return (
+            <tr>
+                <td id="tbl-lbl"><input onChange={this.onChangeNameValue} onBlur={this.onChangeValue}/></td>
+                <td id="data-label" ><input onChange={this.onChangeCountValue} onBlur={this.onChangeValue}/></td>
+            </tr>
+        );
     }
 }
 
@@ -85,6 +119,7 @@ class DataCollection extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            numEquipment: 0,
             numWorkList: 0,
             ClientName: "",
             ClientAddress: "",
@@ -97,10 +132,7 @@ class DataCollection extends React.Component {
             PutDate: "",
             PerformData: "",
             WorkList: [],
-            RepairEquipments: [{
-                RepairParts: "",
-                CountRepairParts: ""
-            }],
+            RepairEquipments: [],
             inputList:[]
         };
     }
@@ -157,15 +189,28 @@ class DataCollection extends React.Component {
         });
     }
     
-    updateMasterWork = (value, key) => {
+    updateMasterWork = (value, number) => {
         if (value != null)
         {
-            works[key] = value;
+            works[number] = value;
             this.setState({
                 WorkList: works
             });
         }
-        
+        console.log(typeof (this.state.WorkList));
+    }
+
+    updateRepairEquipment = (name, count, number) => {
+        if (name != null && count != null)
+        {
+            console.log(number);
+            equipments[number] = [name, count];
+            console.log(equipments);
+            this.setState({
+                RepairEquipments: equipments
+            });
+            console.log(typeof (this.state.RepairEquipments));
+        }
     }
 
     onSaveClick = () => {
@@ -180,19 +225,13 @@ class DataCollection extends React.Component {
             "MasterPersonnelNumber": this.state.MasterPersonnelNumber,
             "PutDate": this.state.PutDate,
             "PerformData": this.state.PerformData,
-            "WorkList": this.state.WorkList
+            "WorkList": this.state.WorkList,
+            "RepairEquipments": this.state.RepairEquipments
         });
         var xhr = new XMLHttpRequest();
         xhr.open("post", this.props.apiUrlSave, true);
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.send(data);
-    }
-
-    onAddInputClick = (e) => {
-        const list = this.state.WorkList;
-        this.setState({
-            WorkList: list.concat(<MasterWork key={list.length}/>)
-        });
     }
 
     onAddMasterWork = () => {
@@ -201,10 +240,19 @@ class DataCollection extends React.Component {
         });
     }
 
+    onAddRepairEquipments = () => {
+        this.setState({
+            numEquipment: this.state.numEquipment + 1
+        });
+    }
     render() {
         const workList = [];
         for (var i = 0; i < this.state.numWorkList; i += 1) {
             workList.push(<MasterWork key={i} number={i} updateMasterWork={this.updateMasterWork}/>);
+        }
+        const equipmentList = [];
+        for (var i = 0; i < this.state.numEquipment; i += 1) {
+            equipmentList.push(<RepairEquipment key={i} number={i} updateRepairEquipment={this.updateRepairEquipment}/>);
         }
         return (
             <div className={"invisible"+ (this.props.addVisible ? "" : "_none")}>
@@ -267,7 +315,23 @@ class DataCollection extends React.Component {
                         </tbody>
                     </table>
                     <br />
-                    <button onClick={this.onAddMasterWork}>Добавить работу</button>
+                    <button onClick={this.onAddMasterWork}>Добавить</button>
+                    <br />
+                    <br />
+                    <h2>Расходные материалы</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Материал</td>
+                                <td>Количество</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {equipmentList}
+                        </tbody>
+                    </table>
+                    <br />
+                    <button onClick={this.onAddRepairEquipments}>Добавить</button>
                     <br />
                     <br />
                     <button onClick={this.onSaveClick}>Сохранить в файл</button>
@@ -386,7 +450,7 @@ class BtnGroup extends React.Component {
                                 </tr>
                                 <tr>
                                     <td><label>Дата сдачи оборудования: </label></td>
-                                    <td>{this.state.deserializeFile.putDate}</td>
+                                    <td>{this.state.deserializeFile.putDate.slice(0,10)}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -403,7 +467,7 @@ class BtnGroup extends React.Component {
                                 </tr>
                                 <tr>
                                     <td><label>Дата выполения: </label></td>
-                                    <td>{this.state.deserializeFile.performData}</td>
+                                    <td>{this.state.deserializeFile.performData.slice(0,10)}</td>
                                 </tr>
                                     <td>Выполненные работы: </td>
                                     {
@@ -420,8 +484,8 @@ class BtnGroup extends React.Component {
                                         return (
                                             <tr>
                                                 <td>{index + 1} </td>
-                                                <td>{item.repairParts}</td>
-                                                <td>{item.countRepairParts}</td>
+                                                <td>{item[0]}</td>
+                                                <td>{item[1]}</td>
                                             </tr>
                                         )})}
                             </tbody>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataCollectionService.Entities
+namespace DataCollectionService.Models
 {
     [Serializable]
     public class RepairEquipment
@@ -9,14 +9,14 @@ namespace DataCollectionService.Entities
         {
         }
 
-        public RepairEquipment(string repairParts, int countRepairParts)
+        public RepairEquipment(string name, int count)
         {
-            this.RepairParts = repairParts;
-            this.CountRepairParts = countRepairParts;
+            this.Name = name;
+            this.Count = count;
         }
 
-        public string RepairParts { get; set; }
+        public string Name { get; set; }
 
-        public int CountRepairParts { get; set; }
+        public int Count { get; set; }
     }
 }
