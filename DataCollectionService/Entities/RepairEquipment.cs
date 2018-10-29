@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataCollectionService.Models
+namespace DataCollectionService.Entities
 {
     [Serializable]
     public class RepairEquipment

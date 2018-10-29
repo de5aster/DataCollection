@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using DataCollectionService.Models;
+using DataCollectionService.Entities;
 using DataCollectionService.Services;
 using FluentAssertions;
 using NUnit.Framework;
@@ -8,9 +8,9 @@ using NUnit.Framework;
 namespace DataCollectionServiceTest
 {
     [TestFixture]
-    public class DataCollectionServiceTest
+    public class ClientCardSerializeTest
     {
-        private readonly Data data = new Data(
+        private readonly ClientCard clientCard = new ClientCard(
             "Антон",
             "Ekb",
             "89122221408",
@@ -24,24 +24,27 @@ namespace DataCollectionServiceTest
             new[] { "sr", "ass" },
             new string[][] { new string[] { "resistor1", "10" }, new string[] { "resistor2", "15" } });
 
-        private readonly DataCollectionProcessor dataCollection = new DataCollectionProcessor();
+        private readonly ClientCardSerializeService dataCollection = new ClientCardSerializeService();
 
         [Test]
         public void SerializeDataToXmlTest()
         {
+
+            this.clientCard.Id = new Guid("00000000-0000-0000-0000-000000000000");
             var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers");
-            var formatter = this.dataCollection.SerializeDataToXml(this.data, filePath);
+            var formatter = this.dataCollection.SerializeDataToXml(this.clientCard, filePath);
             var dataFromXml = this.dataCollection.DeserializeDataFromXml(formatter);
             formatter.Should().BeOfType<string>();
-            dataFromXml.Should().BeEquivalentTo(this.data);
+            dataFromXml.Should().BeEquivalentTo(this.clientCard);
         }
 
         [Test]
         public void DeserializeDataFromXmlTest()
         {
+            this.clientCard.Id = new Guid("00000000-0000-0000-0000-000000000000");
             var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers\\Files\\data.xml");
             var dataFromXml = this.dataCollection.DeserializeDataFromXml(filePath);
-            dataFromXml.Should().BeEquivalentTo(this.data);
+            dataFromXml.Should().BeEquivalentTo(this.clientCard);
         }
     }
 }

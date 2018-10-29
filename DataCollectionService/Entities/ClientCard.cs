@@ -2,32 +2,34 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace DataCollectionService.Models
+namespace DataCollectionService.Entities
 {
     [Serializable]
-    public class Data
+    public class ClientCard
     {
-        public Data()
+        public ClientCard()
         {
         }
 
-        public Data(string clientName, string clientAddress, string phoneNumber, string email, string equipment, string breakage, string masterName, string masterPersonnelNumber, DateTime putDate, DateTime performData, string[] workList, string[][] repairEquipments)
+        public ClientCard(string clientName, string clientAddress, string phoneNumber, string email, string equipment, string breakage, string masterName, string masterPersonnelNumber, DateTime putDate, DateTime performData, string[] workList, string[][] repairEquipments)
         {
-            this.ClientName = clientName;
-            this.ClientAddress = clientAddress;
-            this.PhoneNumber = phoneNumber;
-            this.Email = email;
-            this.Equipment = equipment;
-            this.Breakage = breakage;
-            this.MasterName = masterName;
-            this.MasterPersonnelNumber = masterPersonnelNumber;
+            this.Id = Guid.NewGuid();
+            this.ClientName = clientName.Trim();
+            this.ClientAddress = clientAddress.Trim();
+            this.PhoneNumber = phoneNumber.Trim();
+            this.Email = email.Trim();
+            this.Equipment = equipment.Trim();
+            this.Breakage = breakage.Trim();
+            this.MasterName = masterName.Trim();
+            this.MasterPersonnelNumber = masterPersonnelNumber.Trim();
             this.PutDate = putDate;
             this.PerformData = performData;
             this.WorkList = workList;
             this.RepairEquipments = repairEquipments;
-
-            // this.RepairEquipments = this.SetRepairEquipments(repairEquipments);
         }
+
+        [XmlIgnore]
+        public Guid Id { get; set; }
 
         public string ClientName { get; set; }
 
@@ -63,7 +65,6 @@ namespace DataCollectionService.Models
                 var equipment = equipments[i];
                 re[i] = new RepairEquipment(equipment[0], Convert.ToInt32(equipment[1]));
             }
-
             return re;
         }
     }

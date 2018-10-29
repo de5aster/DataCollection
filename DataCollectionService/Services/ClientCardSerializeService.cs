@@ -1,18 +1,16 @@
 ﻿using System;
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 using System.Xml.Serialization;
-using DataCollectionService.Models;
+using DataCollectionService.Entities;
 
 namespace DataCollectionService.Services
 {
-    public class DataCollectionProcessor
+    public class ClientCardSerializeService
     {
-        public string SerializeDataToXml(Data data, string path)
+        public string SerializeDataToXml(ClientCard data, string path)
         {
-            var filePath = path + "\\Files\\data.xml";
-            var formatter = new XmlSerializer(typeof(Data));
+            var filePath = path + "data.xml";
+            var formatter = new XmlSerializer(typeof(ClientCard));
             using (var fs = new FileStream(filePath, FileMode.Create))
             {
                 try
@@ -27,15 +25,15 @@ namespace DataCollectionService.Services
             }
         }
 
-        public Data DeserializeDataFromXml(string filepath)
+        public ClientCard DeserializeDataFromXml(string filepath)
         {
-            var formatter = new XmlSerializer(typeof(Data));
-            Data data;
+            var formatter = new XmlSerializer(typeof(ClientCard));
+            ClientCard data;
             using (var fs = new FileStream(filepath, FileMode.Open))
             {
                 try
                 {
-                    data = (Data)formatter.Deserialize(fs);
+                    data = (ClientCard)formatter.Deserialize(fs);
                 }
                 catch (Exception ex)
                 {

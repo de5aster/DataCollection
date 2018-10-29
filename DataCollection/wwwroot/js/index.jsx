@@ -478,7 +478,7 @@ class BtnGroup extends React.Component {
                                                 <td>{item}</td>
                                             </tr>
                                         )})}
-                                    <td>Материалы:</td>
+                                    <td >Материалы:</td>
                                     {
                                         this.state.deserializeFile.repairEquipments.map((item, index) => {
                                         return (

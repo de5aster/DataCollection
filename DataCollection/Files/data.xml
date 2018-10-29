@@ -1,46 +1,22 @@
 <?xml version="1.0"?>
 <Data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ClientName>Фамилия Имя Отчетство</ClientName>
-  <ClientAddress>Екатеринбург</ClientAddress>
-  <PhoneNumber>89122221408</PhoneNumber>
-  <Email>mail@mail.ru</Email>
-  <Equipment>TV</Equipment>
-  <Breakage>Не включается</Breakage>
-  <MasterName>Крутой Уокер</MasterName>
-  <MasterPersonnelNumber>23408</MasterPersonnelNumber>
+  <ClientName>sdf</ClientName>
+  <ClientAddress>sdf</ClientAddress>
+  <PhoneNumber>sdf</PhoneNumber>
+  <Email>sdfs</Email>
+  <Equipment>ssss</Equipment>
+  <Breakage>sss</Breakage>
+  <MasterName>ss</MasterName>
+  <MasterPersonnelNumber>ssss</MasterPersonnelNumber>
   <PutDate>2018-10-25T00:00:00</PutDate>
-  <PerformData>2018-10-25T00:00:00</PerformData>
+  <PerformData>2018-10-24T00:00:00</PerformData>
   <WorkList>
-    <Work>работа 1</Work>
-    <Work>работа 2</Work>
-    <Work>работа 3</Work>
-    <Work>работа 4</Work>
-    <Work>работа 5</Work>
+    <Work>sdfsdf</Work>
   </WorkList>
   <RepairEquipments>
     <EquipmentDetails>
-      <string>Катушка</string>
+      <string>sdf</string>
       <string>1</string>
-    </EquipmentDetails>
-    <EquipmentDetails>
-      <string>Конденсатор 10 пФ</string>
-      <string>3</string>
-    </EquipmentDetails>
-    <EquipmentDetails>
-      <string>резистор 100 ом</string>
-      <string>1</string>
-    </EquipmentDetails>
-    <EquipmentDetails>
-      <string>резистор 50кОм</string>
-      <string>1</string>
-    </EquipmentDetails>
-    <EquipmentDetails>
-      <string>транзистор</string>
-      <string>2</string>
-    </EquipmentDetails>
-    <EquipmentDetails>
-      <string>предохранитель</string>
-      <string>10</string>
     </EquipmentDetails>
   </RepairEquipments>
 </Data>

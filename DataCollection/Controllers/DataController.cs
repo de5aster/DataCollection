@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Data;
 using System.IO;
 using System.Threading.Tasks;
-using DataCollectionService.Models;
+using DataCollectionService.Entities;
 using DataCollectionService.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,12 +12,10 @@ namespace DataCollection.Controllers
     [Route("home/api/[action]")]
     public class DataController : Controller
     {
-        private readonly IHostingEnvironment appHostingEnvironment;
-
-        public DataController(IHostingEnvironment appHostingEnvironment)
-        {
-            this.appHostingEnvironment = appHostingEnvironment;
-        }
+        //public DataController(ClientCardContext context)
+        //{
+        //    this.db = context;
+        //}
 
         [HttpPost]
         public async Task<IActionResult> Load(IFormFile file)
@@ -33,7 +30,7 @@ namespace DataCollection.Controllers
                         await file.CopyToAsync(stream);
                     }
 
-                    var dcs = new DataCollectionProcessor();
+                    var dcs = new ClientCardSerializeService();
                     return this.Ok(dcs.DeserializeDataFromXml(filePath));
                 }
 
@@ -46,21 +43,19 @@ namespace DataCollection.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] Data data)
+        public async Task<IActionResult> Save([FromBody] ClientCard clientCard)
         {
-            const string fileType = "application/xml";
-            const string fileName = "client.xml";
-            var dcs = new DataCollectionProcessor();
-            var tempPath = dcs.SerializeDataToXml(data, this.appHostingEnvironment.ContentRootPath);
-            var memory = new MemoryStream();
-
-            using (var stream = new FileStream(tempPath, FileMode.Open))
+            var dcp = new ClientCardSerializeService();
+            using (var db = new ClientCardContext())
             {
-                await stream.CopyToAsync(memory);
+                db.ClientCards.Add(clientCard);
+                await db.SaveChangesAsync();
             }
 
-            memory.Position = 0;
-            return this.File(memory, fileType, fileName);
+            const string fileType = "application/xml";
+            const string fileName = "client.xml";
+            var filePath = dcp.SerializeDataToXml(clientCard, Path.GetTempPath());
+            return this.PhysicalFile(filePath, fileType, fileName);
         }
     }
 }

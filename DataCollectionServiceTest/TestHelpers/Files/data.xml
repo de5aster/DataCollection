@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<Data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ClientCard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CardId>00000000-0000-0000-0000-000000000000</CardId>
   <ClientName>Антон</ClientName>
   <ClientAddress>Ekb</ClientAddress>
   <PhoneNumber>89122221408</PhoneNumber>
@@ -11,17 +12,17 @@
   <PutDate>2018-08-08T00:00:00</PutDate>
   <PerformData>2018-08-15T00:00:00</PerformData>
   <WorkList>
-    <string>sr</string>    
-    <string>ass</string>    
+    <Work>sr</Work>
+    <Work>ass</Work>
   </WorkList>
   <RepairEquipments>
-    <RepairEquipment>
-      <RepairParts>resistor1</RepairParts>
-      <CountRepairParts>10</CountRepairParts>
-    </RepairEquipment>
-    <RepairEquipment>
-      <RepairParts>resistor2</RepairParts>
-      <CountRepairParts>15</CountRepairParts>
-    </RepairEquipment>
+    <EquipmentDetails>
+      <string>resistor1</string>
+      <string>10</string>
+    </EquipmentDetails>
+    <EquipmentDetails>
+      <string>resistor2</string>
+      <string>15</string>
+    </EquipmentDetails>
   </RepairEquipments>
-</Data>
+</ClientCard>
