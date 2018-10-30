@@ -27,12 +27,9 @@ namespace DataCollection
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ClientCardContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddReact();
             services.AddMvc();
-
-            // services.AddTransient<ClientCardContext, ClientCardContext>();
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
             return services.BuildServiceProvider();

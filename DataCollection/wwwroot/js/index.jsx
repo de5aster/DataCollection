@@ -132,7 +132,10 @@ class DataCollection extends React.Component {
             PutDate: "",
             PerformData: "",
             WorkList: [],
-            RepairEquipments: [],
+            RepairEquipments: {
+                'Name': '',
+                'Count': ''
+            },
             inputList:[]
         };
     }
@@ -204,7 +207,9 @@ class DataCollection extends React.Component {
         if (name != null && count != null)
         {
             console.log(number);
-            equipments[number] = [name, count];
+            //equipments[number] = [name, count];
+            equipments['Name'] = name;
+            equipments['Count'] = count;
             console.log(equipments);
             this.setState({
                 RepairEquipments: equipments
@@ -214,6 +219,8 @@ class DataCollection extends React.Component {
     }
 
     onSaveClick = () => {
+        let repairs = {};
+        repairs['Name'] = this.state.RepairEquipments[0]
         var data = JSON.stringify({
             "ClientName": this.state.ClientName,
             "ClientAddress": this.state.ClientAddress,

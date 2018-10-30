@@ -12,11 +12,6 @@ namespace DataCollection.Controllers
     [Route("home/api/[action]")]
     public class DataController : Controller
     {
-        //public DataController(ClientCardContext context)
-        //{
-        //    this.db = context;
-        //}
-
         [HttpPost]
         public async Task<IActionResult> Load(IFormFile file)
         {
@@ -46,12 +41,6 @@ namespace DataCollection.Controllers
         public async Task<IActionResult> Save([FromBody] ClientCard clientCard)
         {
             var dcp = new ClientCardSerializeService();
-            using (var db = new ClientCardContext())
-            {
-                db.ClientCards.Add(clientCard);
-                await db.SaveChangesAsync();
-            }
-
             const string fileType = "application/xml";
             const string fileName = "client.xml";
             var filePath = dcp.SerializeDataToXml(clientCard, Path.GetTempPath());

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DataCollectionService.Entities;
+using DataCollectionService.Services;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design.Internal;
 using NUnit.Framework;
 
 namespace DataCollectionServiceTest
@@ -14,19 +12,10 @@ namespace DataCollectionServiceTest
     [TestFixture]
     public class ClientCardContextTest
     {
-        private DbContextOptions<ClientCardContext> options;
-
-        public ClientCardContextTest()
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<ClientCardContext>();
-            this.options = optionsBuilder.Options;
-        }
-
         [Test]
         public void CanAddAndUpdateSomeData()
         {
-            var clientCard = new ClientCard
-            (
+            var clientCard = new ClientCard (
                 "Антон",
                 "ЕКБ",
                 "8",
@@ -37,17 +26,20 @@ namespace DataCollectionServiceTest
                 "123",
                 new DateTime(2018, 01, 01),
                 new DateTime(2018, 01, 01),
-                new[] { "1" },
-                new string[][] { new string[] { "resistor1", "10" }, new string[] { "resistor2", "15" } });
-            using (var context = new ClientCardContext(this.options))
-            {
-                context.ClientCards.Add(clientCard);
-                context.SaveChanges();
-            }
+                new List<Works> { new Works("1") },
+                new List<RepairEquipment> { new RepairEquipment("resistor1", 10), new RepairEquipment("resistor2", 15) });
+            var dbservice = new ClientCardDatabaseService();
 
-            using (var context = new ClientCardContext(this.options))
+            using (var context = new ClientCardContext())
             {
-                context.ClientCards.FirstOrDefault().ClientName.Should().Be("Антон");
+                dbservice.AddClientCard(clientCard);
+                context.SaveChanges();
+                var db = context.ClientCards.ToList();
+                context.ClientCards.Last().ClientName.Should().Be("Антон");
+                db.Select(p => p.WorkList
+                .Where(e => e.Work == "1")
+                .Should()
+                .NotBeEmpty());
             }
         }
     }

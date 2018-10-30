@@ -120,13 +120,14 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\ClientCard.cs" />
     <Compile Include="Entities\ClientCardContext.cs" />
     <Compile Include="Entities\RepairEquipment.cs" />
+    <Compile Include="Entities\Works.cs" />
+    <Compile Include="Services\ClientCardDatabaseService.cs" />
     <Compile Include="Services\ClientCardSerializeService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

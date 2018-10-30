@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using DataCollectionService.Entities;
 using DataCollectionService.Services;
@@ -21,17 +22,17 @@ namespace DataCollectionServiceTest
             "123434",
             new DateTime(2018, 08, 08),
             new DateTime(2018, 08, 15),
-            new[] { "sr", "ass" },
-            new string[][] { new string[] { "resistor1", "10" }, new string[] { "resistor2", "15" } });
+            new List<Works> { new Works("sr") },
+            new List<RepairEquipment> { new RepairEquipment("resistor1", 10), new RepairEquipment("resistor2", 15) });
 
         private readonly ClientCardSerializeService dataCollection = new ClientCardSerializeService();
+        private Guid defaultGuidId = new Guid("00000000-0000-0000-0000-000000000000");
 
         [Test]
         public void SerializeDataToXmlTest()
         {
-
-            this.clientCard.Id = new Guid("00000000-0000-0000-0000-000000000000");
-            var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers");
+            this.clientCard.Id = this.defaultGuidId;
+            var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers\\Files\\");
             var formatter = this.dataCollection.SerializeDataToXml(this.clientCard, filePath);
             var dataFromXml = this.dataCollection.DeserializeDataFromXml(formatter);
             formatter.Should().BeOfType<string>();
@@ -41,7 +42,10 @@ namespace DataCollectionServiceTest
         [Test]
         public void DeserializeDataFromXmlTest()
         {
-            this.clientCard.Id = new Guid("00000000-0000-0000-0000-000000000000");
+            this.clientCard.Id = this.defaultGuidId;
+            this.clientCard.WorkList[0].WorkId = this.defaultGuidId;
+            this.clientCard.RepairEquipments[0].Id = this.defaultGuidId;
+            this.clientCard.RepairEquipments[1].Id = this.defaultGuidId;
             var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers\\Files\\data.xml");
             var dataFromXml = this.dataCollection.DeserializeDataFromXml(filePath);
             dataFromXml.Should().BeEquivalentTo(this.clientCard);

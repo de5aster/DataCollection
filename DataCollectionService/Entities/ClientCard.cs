@@ -11,7 +11,7 @@ namespace DataCollectionService.Entities
         {
         }
 
-        public ClientCard(string clientName, string clientAddress, string phoneNumber, string email, string equipment, string breakage, string masterName, string masterPersonnelNumber, DateTime putDate, DateTime performData, string[] workList, string[][] repairEquipments)
+        public ClientCard(string clientName, string clientAddress, string phoneNumber, string email, string equipment, string breakage, string masterName, string masterPersonnelNumber, DateTime putDate, DateTime performData, List<Works> workList, List<RepairEquipment> repairEquipments)
         {
             this.Id = Guid.NewGuid();
             this.ClientName = clientName.Trim();
@@ -24,11 +24,10 @@ namespace DataCollectionService.Entities
             this.MasterPersonnelNumber = masterPersonnelNumber.Trim();
             this.PutDate = putDate;
             this.PerformData = performData;
-            this.WorkList = workList;
-            this.RepairEquipments = repairEquipments;
+            this.WorkList = this.AddWork(workList);
+            this.RepairEquipments = this.AddRepairEquipments(repairEquipments);
         }
 
-        [XmlIgnore]
         public Guid Id { get; set; }
 
         public string ClientName { get; set; }
@@ -39,7 +38,7 @@ namespace DataCollectionService.Entities
 
         public string Email { get; set; }
 
-        public string Equipment { get; set; } // Возможно Enum
+        public string Equipment { get; set; }
 
         public string Breakage { get; set; }
 
@@ -51,21 +50,30 @@ namespace DataCollectionService.Entities
 
         public DateTime PerformData { get; set; }
 
-        [XmlArrayItem("Work")]
-        public string[] WorkList { get; set; }
+        public List<Works> WorkList { get; set; } = new List<Works>();
 
-        [XmlArrayItem("EquipmentDetails")]
-        public string[][] RepairEquipments { get; set; }
+        public List<RepairEquipment> RepairEquipments { get; set; } = new List<RepairEquipment>();
 
-        private RepairEquipment[] SetRepairEquipments(string[][] equipments)
+        private List<Works> AddWork(List<Works> works)
         {
-            var re = new RepairEquipment[equipments.Length];
-            for (var i = 0; i < equipments.Length; i++)
+            var workList = new List<Works>();
+            foreach (var work in works)
             {
-                var equipment = equipments[i];
-                re[i] = new RepairEquipment(equipment[0], Convert.ToInt32(equipment[1]));
+                workList.Add(work);
             }
-            return re;
+
+            return workList;
+        }
+
+        private List<RepairEquipment> AddRepairEquipments(List<RepairEquipment> equips)
+        {
+            var repairEquips = new List<RepairEquipment>();
+            foreach (var equip in equips)
+            {
+                repairEquips.Add(equip);
+            }
+
+            return repairEquips;
         }
     }
 }
