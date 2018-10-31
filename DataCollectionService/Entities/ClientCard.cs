@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
+using DataCollectionService.Helpers;
 
 namespace DataCollectionService.Entities
 {
@@ -11,21 +11,21 @@ namespace DataCollectionService.Entities
         {
         }
 
-        public ClientCard(string clientName, string clientAddress, string phoneNumber, string email, string equipment, string breakage, string masterName, string masterPersonnelNumber, DateTime putDate, DateTime performData, List<Works> workList, List<RepairEquipment> repairEquipments)
+        public ClientCard(ClientCardFromBody clientCardFromBody)
         {
             this.Id = Guid.NewGuid();
-            this.ClientName = clientName.Trim();
-            this.ClientAddress = clientAddress.Trim();
-            this.PhoneNumber = phoneNumber.Trim();
-            this.Email = email.Trim();
-            this.Equipment = equipment.Trim();
-            this.Breakage = breakage.Trim();
-            this.MasterName = masterName.Trim();
-            this.MasterPersonnelNumber = masterPersonnelNumber.Trim();
-            this.PutDate = putDate;
-            this.PerformData = performData;
-            this.WorkList = this.AddWork(workList);
-            this.RepairEquipments = this.AddRepairEquipments(repairEquipments);
+            this.ClientName = clientCardFromBody.ClientName.Trim();
+            this.ClientAddress = clientCardFromBody.ClientAddress.Trim();
+            this.PhoneNumber = clientCardFromBody.PhoneNumber.Trim();
+            this.Email = clientCardFromBody.Email.Trim();
+            this.Equipment = clientCardFromBody.Equipment.Trim();
+            this.Breakage = clientCardFromBody.Breakage.Trim();
+            this.MasterName = clientCardFromBody.MasterName.Trim();
+            this.MasterPersonnelNumber = clientCardFromBody.MasterPersonnelNumber.Trim();
+            this.PutDate = clientCardFromBody.PutDate;
+            this.PerformData = clientCardFromBody.PerformData;
+            this.WorkList = this.AddWork(clientCardFromBody.WorkList);
+            this.RepairEquipments = this.AddRepairEquipments(clientCardFromBody.RepairEquipments);
         }
 
         public Guid Id { get; set; }
@@ -54,23 +54,25 @@ namespace DataCollectionService.Entities
 
         public List<RepairEquipment> RepairEquipments { get; set; } = new List<RepairEquipment>();
 
-        private List<Works> AddWork(List<Works> works)
+        private List<Works> AddWork(string[] works)
         {
             var workList = new List<Works>();
             foreach (var work in works)
             {
-                workList.Add(work);
+                workList.Add(new Works(work));
             }
 
             return workList;
         }
 
-        private List<RepairEquipment> AddRepairEquipments(List<RepairEquipment> equips)
+        private List<RepairEquipment> AddRepairEquipments(string[][] equips)
         {
             var repairEquips = new List<RepairEquipment>();
             foreach (var equip in equips)
             {
-                repairEquips.Add(equip);
+                var name = equip[0];
+                var count = Convert.ToInt32(equip[1]);
+                repairEquips.Add(new RepairEquipment(name, count));
             }
 
             return repairEquips;

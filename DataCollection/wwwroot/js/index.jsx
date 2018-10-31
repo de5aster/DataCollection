@@ -132,10 +132,7 @@ class DataCollection extends React.Component {
             PutDate: "",
             PerformData: "",
             WorkList: [],
-            RepairEquipments: {
-                'Name': '',
-                'Count': ''
-            },
+            RepairEquipments: [],
             inputList:[]
         };
     }
@@ -207,20 +204,17 @@ class DataCollection extends React.Component {
         if (name != null && count != null)
         {
             console.log(number);
-            //equipments[number] = [name, count];
-            equipments['Name'] = name;
-            equipments['Count'] = count;
+            equipments[number] = [name, count];
             console.log(equipments);
             this.setState({
-                RepairEquipments: equipments
+                RepairEquipments : equipments
             });
             console.log(typeof (this.state.RepairEquipments));
         }
     }
 
     onSaveClick = () => {
-        let repairs = {};
-        repairs['Name'] = this.state.RepairEquipments[0]
+        
         var data = JSON.stringify({
             "ClientName": this.state.ClientName,
             "ClientAddress": this.state.ClientAddress,
@@ -482,7 +476,7 @@ class BtnGroup extends React.Component {
                                         return (
                                             <tr>
                                                 <td>{index +1} </td>
-                                                <td>{item}</td>
+                                                <td>{item.work}</td>
                                             </tr>
                                         )})}
                                     <td >Материалы:</td>
@@ -491,8 +485,8 @@ class BtnGroup extends React.Component {
                                         return (
                                             <tr>
                                                 <td>{index + 1} </td>
-                                                <td>{item[0]}</td>
-                                                <td>{item[1]}</td>
+                                                <td>{item.name}</td>
+                                                <td>{item.count}</td>
                                             </tr>
                                         )})}
                             </tbody>

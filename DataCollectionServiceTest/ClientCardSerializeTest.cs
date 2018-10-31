@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using DataCollectionService.Entities;
+using DataCollectionService.Helpers;
 using DataCollectionService.Services;
 using FluentAssertions;
 using NUnit.Framework;
@@ -11,7 +11,7 @@ namespace DataCollectionServiceTest
     [TestFixture]
     public class ClientCardSerializeTest
     {
-        private readonly ClientCard clientCard = new ClientCard(
+        private static ClientCardFromBody clientCardFromBody = new ClientCardFromBody(
             "Антон",
             "Ekb",
             "89122221408",
@@ -22,11 +22,12 @@ namespace DataCollectionServiceTest
             "123434",
             new DateTime(2018, 08, 08),
             new DateTime(2018, 08, 15),
-            new List<Works> { new Works("sr") },
-            new List<RepairEquipment> { new RepairEquipment("resistor1", 10), new RepairEquipment("resistor2", 15) });
+            new string[] { "sr" },
+            new string[][] { new string[] { "resistor1", "10" }, new string[] { "resistor2", "15" } });
 
-        private readonly ClientCardSerializeService dataCollection = new ClientCardSerializeService();
+        private ClientCardSerializeService dataCollection = new ClientCardSerializeService();
         private Guid defaultGuidId = new Guid("00000000-0000-0000-0000-000000000000");
+        private ClientCard clientCard = new ClientCard(clientCardFromBody);
 
         [Test]
         public void SerializeDataToXmlTest()

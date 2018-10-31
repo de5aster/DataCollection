@@ -127,6 +127,7 @@
     <Compile Include="Entities\ClientCardContext.cs" />
     <Compile Include="Entities\RepairEquipment.cs" />
     <Compile Include="Entities\Works.cs" />
+    <Compile Include="Helpers\ClientCardFromBody.cs" />
     <Compile Include="Services\ClientCardDatabaseService.cs" />
     <Compile Include="Services\ClientCardSerializeService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -139,6 +140,7 @@
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

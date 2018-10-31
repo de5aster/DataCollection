@@ -2,8 +2,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using DataCollectionService.Entities;
+using DataCollectionService.Helpers;
 using DataCollectionService.Services;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,11 +38,12 @@ namespace DataCollection.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] ClientCard clientCard)
+        public IActionResult Save([FromBody] ClientCardFromBody clientCardFromBody)
         {
             var dcp = new ClientCardSerializeService();
             const string fileType = "application/xml";
             const string fileName = "client.xml";
+            var clientCard = new ClientCard(clientCardFromBody);
             var filePath = dcp.SerializeDataToXml(clientCard, Path.GetTempPath());
             return this.PhysicalFile(filePath, fileType, fileName);
         }
