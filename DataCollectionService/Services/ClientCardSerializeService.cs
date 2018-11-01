@@ -7,7 +7,7 @@ namespace DataCollectionService.Services
 {
     public class ClientCardSerializeService
     {
-        public string SerializeDataToXml(ClientCard data, string path)
+        public static string SerializeDataToXml(ClientCard data, string path)
         {
             var filePath = path + "data.xml";
             var formatter = new XmlSerializer(typeof(ClientCard));
@@ -25,7 +25,7 @@ namespace DataCollectionService.Services
             }
         }
 
-        public ClientCard DeserializeDataFromXml(string filepath)
+        public static ClientCard DeserializeDataFromXml(string filepath)
         {
             var formatter = new XmlSerializer(typeof(ClientCard));
             ClientCard data;

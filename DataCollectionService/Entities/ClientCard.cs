@@ -11,23 +11,22 @@ namespace DataCollectionService.Entities
         {
         }
 
-        public ClientCard(ClientCardFromBody clientCardFromBody)
-        {
-            this.Id = Guid.NewGuid();
-            this.ClientName = clientCardFromBody.ClientName.Trim();
-            this.ClientAddress = clientCardFromBody.ClientAddress.Trim();
-            this.PhoneNumber = clientCardFromBody.PhoneNumber.Trim();
-            this.Email = clientCardFromBody.Email.Trim();
-            this.Equipment = clientCardFromBody.Equipment.Trim();
-            this.Breakage = clientCardFromBody.Breakage.Trim();
-            this.MasterName = clientCardFromBody.MasterName.Trim();
-            this.MasterPersonnelNumber = clientCardFromBody.MasterPersonnelNumber.Trim();
-            this.PutDate = clientCardFromBody.PutDate;
-            this.PerformData = clientCardFromBody.PerformData;
-            this.WorkList = this.AddWork(clientCardFromBody.WorkList);
-            this.RepairEquipments = this.AddRepairEquipments(clientCardFromBody.RepairEquipments);
-        }
-
+        // public ClientCard(ClientCardFromBody clientCardFromBody)
+        // {
+        //     this.Id = Guid.NewGuid();
+        //    this.ClientName = clientCardFromBody.ClientName.Trim();
+        //    this.ClientAddress = clientCardFromBody.ClientAddress.Trim();
+        //    this.PhoneNumber = clientCardFromBody.PhoneNumber.Trim();
+        //    this.Email = clientCardFromBody.Email.Trim();
+        //    this.Equipment = clientCardFromBody.Equipment.Trim();
+        //    this.Breakage = clientCardFromBody.Breakage.Trim();
+        //    this.MasterName = clientCardFromBody.MasterName.Trim();
+        //    this.MasterPersonnelNumber = clientCardFromBody.MasterPersonnelNumber.Trim();
+        //    this.PutDate = clientCardFromBody.PutDate;
+        //    this.PerformData = clientCardFromBody.PerformData;
+        //    this.WorkList = this.AddWork(clientCardFromBody.WorkList);
+        //    this.RepairEquipments = this.AddRepairEquipments(clientCardFromBody.RepairEquipments);
+        // }
         public Guid Id { get; set; }
 
         public string ClientName { get; set; }
@@ -54,7 +53,27 @@ namespace DataCollectionService.Entities
 
         public List<RepairEquipment> RepairEquipments { get; set; } = new List<RepairEquipment>();
 
-        private List<Works> AddWork(string[] works)
+        public static ClientCard ConvertToClientCard(ClientCardFromBody client)
+        {
+            return new ClientCard
+            {
+                Id = Guid.NewGuid(),
+                ClientName = client.ClientName.Trim(),
+                ClientAddress = client.ClientAddress.Trim(),
+                PhoneNumber = client.PhoneNumber.Trim(),
+                Email = client.Email.Trim(),
+                Equipment = client.Equipment.Trim(),
+                Breakage = client.Breakage.Trim(),
+                MasterName = client.MasterName.Trim(),
+                MasterPersonnelNumber = client.MasterPersonnelNumber.Trim(),
+                PutDate = client.PutDate,
+                PerformData = client.PerformData,
+                WorkList = AddWork(client.WorkList),
+                RepairEquipments = AddRepairEquipments(client.RepairEquipments)
+            };
+        }
+
+        private static List<Works> AddWork(string[] works)
         {
             var workList = new List<Works>();
             foreach (var work in works)
@@ -65,7 +84,7 @@ namespace DataCollectionService.Entities
             return workList;
         }
 
-        private List<RepairEquipment> AddRepairEquipments(string[][] equips)
+        private static List<RepairEquipment> AddRepairEquipments(string[][] equips)
         {
             var repairEquips = new List<RepairEquipment>();
             foreach (var equip in equips)

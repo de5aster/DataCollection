@@ -12,6 +12,8 @@ namespace DataCollection.Controllers
     [Route("home/api/[action]")]
     public class DataController : Controller
     {
+        private ClientCardDatabaseService dbService = new ClientCardDatabaseService();
+
         [HttpPost]
         public async Task<IActionResult> Load(IFormFile file)
         {
@@ -26,7 +28,7 @@ namespace DataCollection.Controllers
                     }
 
                     var dcs = new ClientCardSerializeService();
-                    return this.Ok(dcs.DeserializeDataFromXml(filePath));
+                    return this.Ok(ClientCardSerializeService.DeserializeDataFromXml(filePath));
                 }
 
                 return this.BadRequest("Don't deserialize file");
@@ -40,12 +42,19 @@ namespace DataCollection.Controllers
         [HttpPost]
         public IActionResult Save([FromBody] ClientCardFromBody clientCardFromBody)
         {
-            var dcp = new ClientCardSerializeService();
-            const string fileType = "application/xml";
+            const string fileType = "application/otcet-stream";
             const string fileName = "client.xml";
-            var clientCard = new ClientCard(clientCardFromBody);
-            var filePath = dcp.SerializeDataToXml(clientCard, Path.GetTempPath());
+            var clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
+            this.dbService.AddClientCard(clientCard);
+            var filePath = ClientCardSerializeService.SerializeDataToXml(clientCard, Path.GetTempPath());
             return this.PhysicalFile(filePath, fileType, fileName);
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var clientCardList = this.dbService.GetAllClientCards();
+            return this.Ok(clientCardList);
         }
     }
 }

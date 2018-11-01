@@ -6,6 +6,9 @@ var Button = ReactBootstrap.Button;
 
 var works = [];
 var equipments = [];
+var apiLoad = "home/api/load";
+var apiSave = "home/api/save";
+var apiGetAll = "home/api/getall";
 
 class MasterWork extends React.Component {
     constructor(props) {
@@ -77,21 +80,32 @@ class HomePage extends React.Component
         super(props);
         this.state = {
             addVisible: false,
-            loadVisible: false
+            loadVisible: false,
+            databaseVisible: false
         };
     }
     onAddClick = (e) => {
         e.preventDefault();
         this.setState(()=> ({
             addVisible: true,
-            loadVisible: false
+            loadVisible: false,
+            databaseVisible: false
         }));
     }
     onLoadClick = (e) => {
         e.preventDefault();
         this.setState(() => ({
             addVisible: false,
-            loadVisible: true
+            loadVisible: true,
+            databaseVisible: false
+        }));
+    }
+    onDatabaseClick = (e) => {
+        e.preventDefault();
+        this.setState(() => ({
+            addVisible: false,
+            loadVisible: false,
+            databaseVisible: true
         }));
     }
 
@@ -100,15 +114,20 @@ class HomePage extends React.Component
             <div>
                 <h1>Карта технических работ</h1>
                 <button bsStyle = "primary" onClick = {this.onAddClick}>Создать новую карту </button>
-                <button bsStyle = "primary" onClick={this.onLoadClick}>Загрузить созданную карту</button>
+                <button bsStyle="primary" onClick={this.onLoadClick}>Загрузить созданную карту</button>
+                <button bsStyle="primary" onClick={this.onDatabaseClick}>Загрузить из базы</button>
                 <BtnGroup
-                    apiUrlLoad="home/api/load"
+                    apiUrlLoad={apiLoad}
                     addVisible={this.state.addVisible}
                     loadVisible = {this.state.loadVisible}
                 />
                 <DataCollection
                     addVisible={this.state.addVisible}
-                    apiUrlSave="home/api/save"
+                    apiUrlSave={apiSave}
+                />
+                <DatabasePage
+                    databaseVisible={this.state.databaseVisible}
+                    apiUrlGetAll={apiGetAll}
                 />
             </div>
             );
@@ -499,23 +518,66 @@ class BtnGroup extends React.Component {
 
 }
 
+class DatabasePage extends React.Component
+{
+    constructor(props) {
+        super(props);
+        this.state = {
+            deserializeFile: {
+                clientName: "",
+                clientAddress: "",
+                phoneNumber: "",
+                email: "",
+                equipment: "",
+                breakage: "",
+                masterName: "",
+                masterPersonnelNumber: "",
+                putDate: "",
+                performData: "",
+                workList: [],
+                repairEquipments: [{
+                    repairParts: "",
+                    countRepairParts: ""
+                }]
+            }
+        }
+    }
+
+        onGetDatabase = (e) => {
+            e.preventDefault();            
+            fetch(this.props.apiUrlGetAll)
+            .then((res) => {
+                if (res.status === 200) {
+                    return res.json();
+                }
+                if (res.status === 400) {
+                    this.setState({
+                        error: "400"
+                    });
+                }
+                return null;
+            }, function () {
+                this.setState({
+                    error: "Что-то пошло не так. Попробуйте обновить страницу и повторить попытку"
+
+                });
+            }).then((data) => {
+                this.setState({
+                    deserializeFile: data
+                });
+            });
+        }
+
+    render() {
+            return (               
+            <div className={"invisible" + (this.props.databaseVisible ? "" : "_none")}>
+                <button bsStyle="primary" onClick={this.onGetDatabase}>Загрузить всё из базы</button>
+            </div>
+        );
+    }
+}
+
 ReactDOM.render(
     <HomePage />,
     document.getElementById("content")
 );
-
-class MasterWorkLoad extends React.Component
-{
-    render() {
-        return (
-                this.props.masterWorks.map(function(work, index) {
-                return (
-                    <tr key={index}>
-                        <td>Выполненные работы:</td>
-                        <td>work</td>
-                    </tr>);
-                })
-            
-            );
-    }
-}

@@ -27,26 +27,13 @@ namespace DataCollectionServiceTest
                 new string[][] { new string[] { "resistor1", "10" }, new string[] { "resistor2", "15" } });
 
         private ClientCardDatabaseService dbservice = new ClientCardDatabaseService();
-        private ClientCard clientCard = new ClientCard(clientCardFromBody);
+        private ClientCard clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
 
         [Test]
         public void CanAddAndUpdateSomeData()
         {
-            var clientCardFromBody = new ClientCardFromBody (
-                "Антон",
-                "ЕКБ",
-                "8",
-                "mail@mail.ru",
-                "TV",
-                "Display",
-                "Sergey",
-                "123",
-                new DateTime(2018, 01, 01),
-                new DateTime(2018, 01, 01),
-                new string[] { "sr" },
-                new string[][] { new string[] { "resistor1", "10" }, new string[] { "resistor2", "15" } });
             var dbservice = new ClientCardDatabaseService();
-            var clientCard = new ClientCard(clientCardFromBody);
+            var clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
             using (var context = new ClientCardContext())
             {
                 dbservice.AddClientCard(clientCard);

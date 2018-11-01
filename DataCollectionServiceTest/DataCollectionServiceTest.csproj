@@ -147,6 +147,8 @@
   <ItemGroup>
     <Compile Include="ClientCardContextTest.cs" />
     <Compile Include="ClientCardSerializeTest.cs" />
+    <Compile Include="ClientCardTests.cs" />
+    <Compile Include="ClientClassFromBodyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

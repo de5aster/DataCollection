@@ -1,10 +1,15 @@
-﻿
-using System;
+﻿using System;
+using System.Collections.Generic;
+using DataCollectionService.Entities;
 
 namespace DataCollectionService.Helpers
 {
     public class ClientCardFromBody
     {
+        public ClientCardFromBody()
+        {
+        }
+
         public ClientCardFromBody(string clientName, string clientAddress, string phoneNumber, string email, string equipment, string breakage, string masterName, string masterPersonnelNumber, DateTime putDate, DateTime performData, string[] workList, string[][] repairEquipments)
         {
             this.ClientName = clientName.Trim();
@@ -44,5 +49,51 @@ namespace DataCollectionService.Helpers
         public string[] WorkList { get; set; }
 
         public string[][] RepairEquipments { get; set; }
+
+        public static ClientCardFromBody ConvertToClientCardFromBody(ClientCard client)
+        {
+            return new ClientCardFromBody
+            {
+                ClientName = client.ClientName,
+                ClientAddress = client.ClientAddress,
+                PhoneNumber = client.PhoneNumber,
+                Email = client.Email,
+                Equipment = client.Equipment,
+                Breakage = client.Breakage,
+                MasterName = client.MasterName,
+                MasterPersonnelNumber = client.MasterPersonnelNumber,
+                PutDate = client.PutDate,
+                PerformData = client.PerformData,
+                WorkList = AddWork(client.WorkList),
+                RepairEquipments = AddRepairEquipments(client.RepairEquipments)
+            };
+        }
+
+        private static string[] AddWork(List<Works> workList)
+        {
+            string[] works = new string[workList.Count];
+            var index = 0;
+            foreach (var work in workList)
+            {
+                works.SetValue(work.Work, index);
+                index++;
+            }
+
+            return works;
+        }
+
+        private static string[][] AddRepairEquipments(List<RepairEquipment> repairEquipmentList)
+        {
+            var equips = new string[repairEquipmentList.Count][];
+            var index = 0;
+            foreach (var repairEquipments in repairEquipmentList)
+            {
+                var temp = new string[] { repairEquipments.Name, repairEquipments.Count.ToString() };
+                equips.SetValue(temp, index);
+                index++;
+            }
+
+            return equips;
+        }
     }
 }
