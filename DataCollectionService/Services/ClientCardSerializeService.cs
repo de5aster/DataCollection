@@ -1,5 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using System.Text;
 using System.Xml.Serialization;
 using DataCollectionService.Entities;
 
@@ -7,41 +7,43 @@ namespace DataCollectionService.Services
 {
     public class ClientCardSerializeService
     {
-        public static string SerializeDataToXml(ClientCard data, string path)
+        private static XmlSerializer serializer = new XmlSerializer(typeof(ClientCard));
+
+        public static string SerializeDataToXml(ClientCard data, Encoding encode)
         {
-            var filePath = path + "data.xml";
-            var formatter = new XmlSerializer(typeof(ClientCard));
-            using (var fs = new FileStream(filePath, FileMode.Create))
+            using (var ms = new MemoryStream())
             {
-                try
-                {
-                    formatter.Serialize(fs, data);
-                    return filePath;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                serializer.Serialize(ms, data);
+                ms.Position = 0;
+                return encode.GetString(ms.GetBuffer());
             }
         }
 
-        public static ClientCard DeserializeDataFromXml(string filepath)
+        public static ClientCard DeserializeDataFromXml(string data, Encoding encode)
         {
-            var formatter = new XmlSerializer(typeof(ClientCard));
-            ClientCard data;
-            using (var fs = new FileStream(filepath, FileMode.Open))
+            if (string.IsNullOrEmpty(data))
             {
-                try
-                {
-                    data = (ClientCard)formatter.Deserialize(fs);
-                }
-                catch (Exception ex)
-                {
-                   throw ex;
-                }
+                return null;
             }
 
-            return data;
+            using (var ms = new MemoryStream())
+            {
+                var bytes = encode.GetBytes(data);
+                ms.Write(bytes, 0, bytes.Length);
+                ms.Position = 0;
+                return (ClientCard)serializer.Deserialize(ms);
+            }
+        }
+
+        public static string ConvertToString(string[] items)
+        {
+            string result = "";
+            foreach (var item in items)
+            {
+                result += item;
+            }
+
+            return result;
         }
     }
 }

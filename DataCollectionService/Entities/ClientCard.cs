@@ -68,12 +68,12 @@ namespace DataCollectionService.Entities
                 MasterPersonnelNumber = client.MasterPersonnelNumber.Trim(),
                 PutDate = client.PutDate,
                 PerformData = client.PerformData,
-                WorkList = AddWork(client.WorkList),
-                RepairEquipments = AddRepairEquipments(client.RepairEquipments)
+                WorkList = ConvertToWorks(client.WorkList),
+                RepairEquipments = ConvertToRepairEquipment(client.RepairEquipments)
             };
         }
 
-        private static List<Works> AddWork(string[] works)
+        private static List<Works> ConvertToWorks(string[] works)
         {
             var workList = new List<Works>();
             foreach (var work in works)
@@ -84,7 +84,7 @@ namespace DataCollectionService.Entities
             return workList;
         }
 
-        private static List<RepairEquipment> AddRepairEquipments(string[][] equips)
+        private static List<RepairEquipment> ConvertToRepairEquipment(string[][] equips)
         {
             var repairEquips = new List<RepairEquipment>();
             foreach (var equip in equips)

@@ -11,17 +11,13 @@ namespace DataCollectionService.Entities
             this.Database.EnsureCreated();
         }
 
-        public DbSet<ClientCard> ClientCards { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public ClientCardContext(DbContextOptions<ClientCardContext> options)
+            : base(options)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=clientcardstestdb;Trusted_Connection=True;");
-            }
-
-            base.OnConfiguring(optionsBuilder);
+            this.Database.EnsureCreated();
         }
+
+        public DbSet<ClientCard> ClientCards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,9 +27,9 @@ namespace DataCollectionService.Entities
                     b.HasKey("WorkId");
                     b.Property(e => e.Work);
                 });
-            modelBuilder.Entity<Works>()
-                .HasOne(p => p.ClientCard)
-                .WithMany(m => m.WorkList);
+            //modelBuilder.Entity<Works>()
+            //    .HasOne(p => p.ClientCard)
+            //    .WithMany(m => m.WorkList);
             modelBuilder.Entity<RepairEquipment>(
                 b =>
                 {
@@ -41,9 +37,9 @@ namespace DataCollectionService.Entities
                     b.Property(e => e.Name);
                     b.Property(e => e.Count);
                 });
-            modelBuilder.Entity<RepairEquipment>()
-                .HasOne(p => p.ClientCard)
-                .WithMany(p => p.RepairEquipments);
+            //modelBuilder.Entity<RepairEquipment>()
+            //    .HasOne(p => p.ClientCard)
+            //    .WithMany(p => p.RepairEquipments);
         }
     }
 }

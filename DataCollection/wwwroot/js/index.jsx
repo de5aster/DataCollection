@@ -535,10 +535,7 @@ class DatabasePage extends React.Component
                 putDate: "",
                 performData: "",
                 workList: [],
-                repairEquipments: [{
-                    repairParts: "",
-                    countRepairParts: ""
-                }]
+                repairEquipments: []
             }
         }
     }

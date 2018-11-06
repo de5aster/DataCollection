@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using DataCollectionService.Entities;
 using DataCollectionService.Helpers;
 using DataCollectionService.Services;
@@ -29,26 +30,39 @@ namespace DataCollectionServiceTest
         private ClientCard clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
 
         [Test]
-        public void SerializeDataToXmlTest()
+        public void CanSerializeDataToXml()
         {
             this.clientCard.Id = this.defaultGuidId;
             var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers\\Files\\");
-            var formatter = ClientCardSerializeService.SerializeDataToXml(this.clientCard, filePath);
-            var dataFromXml = ClientCardSerializeService.DeserializeDataFromXml(formatter);
-            formatter.Should().BeOfType<string>();
+            var encode = Encoding.GetEncoding(1251);
+            var xmlData = ClientCardSerializeService.SerializeDataToXml(this.clientCard, encode);
+            var dataFromXml = ClientCardSerializeService.DeserializeDataFromXml(xmlData, encode);
+            xmlData.Should().BeOfType<string>();
             dataFromXml.Should().BeEquivalentTo(this.clientCard);
         }
 
         [Test]
-        public void DeserializeDataFromXmlTest()
+        public void CanDeserializeDataFromXml()
         {
             this.clientCard.Id = this.defaultGuidId;
             this.clientCard.WorkList[0].WorkId = this.defaultGuidId;
             this.clientCard.RepairEquipments[0].Id = this.defaultGuidId;
             this.clientCard.RepairEquipments[1].Id = this.defaultGuidId;
+            var encode = Encoding.GetEncoding(1251);
             var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers\\Files\\data.xml");
-            var dataFromXml = ClientCardSerializeService.DeserializeDataFromXml(filePath);
+            var file = File.ReadAllLines(filePath, encode);
+            string stringFile = ClientCardSerializeService.ConvertToString(file);
+
+            var dataFromXml = ClientCardSerializeService.DeserializeDataFromXml(stringFile, encode);
             dataFromXml.Should().BeEquivalentTo(this.clientCard);
+        }
+
+        [Test]
+        public void CanConvertToString()
+        {
+            var strings = new string[] { "test1", "test2" };
+            var result = ClientCardSerializeService.ConvertToString(strings);
+            result.Should().Be("test1test2");
         }
     }
 }
