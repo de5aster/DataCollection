@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DataCollectionService.Helpers;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataCollectionService.Entities
 {
@@ -11,22 +12,6 @@ namespace DataCollectionService.Entities
         {
         }
 
-        // public ClientCard(ClientCardFromBody clientCardFromBody)
-        // {
-        //     this.Id = Guid.NewGuid();
-        //    this.ClientName = clientCardFromBody.ClientName.Trim();
-        //    this.ClientAddress = clientCardFromBody.ClientAddress.Trim();
-        //    this.PhoneNumber = clientCardFromBody.PhoneNumber.Trim();
-        //    this.Email = clientCardFromBody.Email.Trim();
-        //    this.Equipment = clientCardFromBody.Equipment.Trim();
-        //    this.Breakage = clientCardFromBody.Breakage.Trim();
-        //    this.MasterName = clientCardFromBody.MasterName.Trim();
-        //    this.MasterPersonnelNumber = clientCardFromBody.MasterPersonnelNumber.Trim();
-        //    this.PutDate = clientCardFromBody.PutDate;
-        //    this.PerformData = clientCardFromBody.PerformData;
-        //    this.WorkList = this.AddWork(clientCardFromBody.WorkList);
-        //    this.RepairEquipments = this.AddRepairEquipments(clientCardFromBody.RepairEquipments);
-        // }
         public Guid Id { get; set; }
 
         public string ClientName { get; set; }
@@ -49,9 +34,9 @@ namespace DataCollectionService.Entities
 
         public DateTime PerformData { get; set; }
 
-        public List<Works> WorkList { get; set; } = new List<Works>();
+        public virtual List<Work> Works { get; set; } = new List<Work>();
 
-        public List<RepairEquipment> RepairEquipments { get; set; } = new List<RepairEquipment>();
+        public virtual List<RepairEquipment> RepairEquipments { get; set; } = new List<RepairEquipment>();
 
         public static ClientCard ConvertToClientCard(ClientCardFromBody client)
         {
@@ -68,17 +53,17 @@ namespace DataCollectionService.Entities
                 MasterPersonnelNumber = client.MasterPersonnelNumber.Trim(),
                 PutDate = client.PutDate,
                 PerformData = client.PerformData,
-                WorkList = ConvertToWorks(client.WorkList),
+                Works = ConvertToWorks(client.WorkList),
                 RepairEquipments = ConvertToRepairEquipment(client.RepairEquipments)
             };
         }
 
-        private static List<Works> ConvertToWorks(string[] works)
+        private static List<Work> ConvertToWorks(string[] works)
         {
-            var workList = new List<Works>();
+            var workList = new List<Work>();
             foreach (var work in works)
             {
-                workList.Add(new Works(work));
+                workList.Add(new Work(work));
             }
 
             return workList;

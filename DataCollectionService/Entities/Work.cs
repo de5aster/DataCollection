@@ -4,26 +4,26 @@ using System.Xml.Serialization;
 namespace DataCollectionService.Entities
 {
     [Serializable]
-    public class Works
+    public class Work
     {
-        public Works()
+        public Work()
         {
         }
 
-        public Works(string work)
+        public Work(string work)
         {
             this.WorkId = Guid.NewGuid();
-            this.Work = work;
+            this.Name = work;
         }
 
         public Guid WorkId { get; set; }
 
-        public string Work { get; set; }
+        public string Name { get; set; }
 
         [XmlIgnore]
         public Guid ClientCardId { get; set; }
 
         [XmlIgnore]
-        public ClientCard ClientCard { get; set; }
+        public virtual ClientCard ClientCard { get; set; }
     }
 }

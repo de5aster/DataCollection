@@ -378,11 +378,8 @@ class BtnGroup extends React.Component {
                 masterPersonnelNumber: "",
                 putDate: "",
                 performData: "",
-                workList:[],
-                repairEquipments: [{
-                    repairParts: "",
-                    countRepairParts: ""
-                }]
+                works:[],
+                repairEquipments: []
             }
         };
     }
@@ -491,11 +488,11 @@ class BtnGroup extends React.Component {
                                 </tr>
                                     <td>Выполненные работы: </td>
                                     {
-                                    this.state.deserializeFile.workList.map((item,index) => {
+                                    this.state.deserializeFile.works.map((item,index) => {
                                         return (
                                             <tr>
                                                 <td>{index +1} </td>
-                                                <td>{item.work}</td>
+                                                <td>{item.name}</td>
                                             </tr>
                                         )})}
                                     <td >Материалы:</td>

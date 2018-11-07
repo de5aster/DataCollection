@@ -44,15 +44,8 @@ namespace DataCollectionService.Services
 
         public void AddClientCardWithContext(ClientCard clientCard, ClientCardContext context)
         {
-            try
-            {
-                    context.Add(clientCard);
-                    context.SaveChanges();
-            }
-            catch (Exception)
-            {
-                throw new ArgumentException("Result Add method is invalid");
-            }
+            context.Add(clientCard);
+            context.SaveChanges();
         }
 
         public List<ClientCard> GetAllClientCardsWithContext(ClientCardContext context)

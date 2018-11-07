@@ -19,27 +19,20 @@ namespace DataCollectionService.Entities
 
         public DbSet<ClientCard> ClientCards { get; set; }
 
+        public DbSet<RepairEquipment> RepairEquipments { get; set; }
+
+        public DbSet<Work> Works { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Works>(
-                b =>
-                {
-                    b.HasKey("WorkId");
-                    b.Property(e => e.Work);
-                });
-            //modelBuilder.Entity<Works>()
-            //    .HasOne(p => p.ClientCard)
-            //    .WithMany(m => m.WorkList);
-            modelBuilder.Entity<RepairEquipment>(
-                b =>
-                {
-                    b.HasKey("Id");
-                    b.Property(e => e.Name);
-                    b.Property(e => e.Count);
-                });
-            //modelBuilder.Entity<RepairEquipment>()
-            //    .HasOne(p => p.ClientCard)
-            //    .WithMany(p => p.RepairEquipments);
+            modelBuilder.Entity<Work>()
+                .HasOne(c => c.ClientCard)
+                .WithMany(w => w.Works)
+                .HasForeignKey(c => c.ClientCardId);
+            modelBuilder.Entity<RepairEquipment>()
+                .HasOne(c => c.ClientCard)
+                .WithMany(r => r.RepairEquipments)
+                .HasForeignKey(c => c.ClientCardId);
         }
     }
 }

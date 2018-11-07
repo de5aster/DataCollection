@@ -11,12 +11,12 @@
   <MasterPersonnelNumber>123434</MasterPersonnelNumber>
   <PutDate>2018-08-08T00:00:00</PutDate>
   <PerformData>2018-08-15T00:00:00</PerformData>
-  <WorkList>
-    <Works>
+  <Works>
+    <Work>
       <WorkId>00000000-0000-0000-0000-000000000000</WorkId>
-      <Work>sr</Work>
-    </Works>
-  </WorkList>
+      <Name>sr</Name>
+    </Work>
+  </Works>
   <RepairEquipments>
     <RepairEquipment>
       <Id>00000000-0000-0000-0000-000000000000</Id>

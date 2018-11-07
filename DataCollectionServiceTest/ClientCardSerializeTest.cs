@@ -45,7 +45,7 @@ namespace DataCollectionServiceTest
         public void CanDeserializeDataFromXml()
         {
             this.clientCard.Id = this.defaultGuidId;
-            this.clientCard.WorkList[0].WorkId = this.defaultGuidId;
+            this.clientCard.Works[0].WorkId = this.defaultGuidId;
             this.clientCard.RepairEquipments[0].Id = this.defaultGuidId;
             this.clientCard.RepairEquipments[1].Id = this.defaultGuidId;
             var encode = Encoding.GetEncoding(1251);

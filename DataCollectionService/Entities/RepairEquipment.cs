@@ -27,6 +27,6 @@ namespace DataCollectionService.Entities
         public Guid ClientCardId { get; set; }
 
         [XmlIgnore]
-        public ClientCard ClientCard { get; set; }
+        public virtual ClientCard ClientCard { get; set; }
     }
 }

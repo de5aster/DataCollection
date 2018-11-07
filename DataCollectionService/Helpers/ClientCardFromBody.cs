@@ -64,18 +64,18 @@ namespace DataCollectionService.Helpers
                 MasterPersonnelNumber = client.MasterPersonnelNumber,
                 PutDate = client.PutDate,
                 PerformData = client.PerformData,
-                WorkList = AddWork(client.WorkList),
+                WorkList = AddWork(client.Works),
                 RepairEquipments = AddRepairEquipments(client.RepairEquipments)
             };
         }
 
-        private static string[] AddWork(List<Works> workList)
+        private static string[] AddWork(List<Work> workList)
         {
             string[] works = new string[workList.Count];
             var index = 0;
             foreach (var work in workList)
             {
-                works.SetValue(work.Work, index);
+                works.SetValue(work.Name, index);
                 index++;
             }
 

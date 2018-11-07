@@ -15,17 +15,20 @@ namespace DataCollection.Controllers
     [Route("home/api/[action]")]
     public class DataController : Controller
     {
-        private static DbContextOptionsBuilder<ClientCardContext> optionsBuilder = new DbContextOptionsBuilder<ClientCardContext>().UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=clientcardsnewdb;Trusted_Connection=True;");
-        private static DbContextOptions<ClientCardContext> options = optionsBuilder.Options;
         private readonly Encoding encode = Encoding.UTF8;
-        private ClientCardContext context = new ClientCardContext(options);
-        private ClientCardDatabaseService dbService = new ClientCardDatabaseService(options);
+        private DbContextOptions<ClientCardContext> options;
+        private ClientCardContext context;
+        private ClientCardDatabaseService dbService;
 
         public DataController()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ClientCardContext>();
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=clientcardsnewdb;Trusted_Connection=True;");
-            options = optionsBuilder.Options;
+            optionsBuilder
+                .UseLazyLoadingProxies()
+                .UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=clientcardsnew1db;Trusted_Connection=True;");
+            this.options = optionsBuilder.Options;
+            this.dbService = new ClientCardDatabaseService(this.options);
+            this.context = new ClientCardContext(this.options);
         }
 
         [HttpPost]
@@ -79,7 +82,7 @@ namespace DataCollection.Controllers
                 d.Add(ClientCardFromBody.ConvertToClientCardFromBody(client));
             }
 
-            return this.Ok(clientCardList);
+            return this.Ok(d);
         }
     }
 }
