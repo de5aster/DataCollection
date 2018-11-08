@@ -9,6 +9,7 @@ var equipments = [];
 var apiLoad = "home/api/load";
 var apiSave = "home/api/save";
 var apiGetAll = "home/api/getall";
+var apiGetExcel = "home/api/download";
 
 class MasterWork extends React.Component {
     constructor(props) {
@@ -128,6 +129,7 @@ class HomePage extends React.Component
                 <DatabasePage
                     databaseVisible={this.state.databaseVisible}
                     apiUrlGetAll={apiGetAll}
+                    apiUrlGetExcel={apiGetExcel}
                 />
             </div>
             );
@@ -251,7 +253,19 @@ class DataCollection extends React.Component {
         var xhr = new XMLHttpRequest();
         xhr.open("post", this.props.apiUrlSave, true);
         xhr.setRequestHeader("Content-type", "application/json");
-        xhr.send(data);
+        xhr.onload = function (e) {            
+            var blob = xhr.response;
+            this.saveOrOpenBlob(blob);
+        }.bind(this)
+        xhr.send(data);        
+    }
+    saveOrOpenBlob = (blob) => {
+        var data = new Blob([blob], { type: 'text/xml' }),        
+            fileURL = window.URL.createObjectURL(data),
+            tempLink = document.createElement('a');
+        tempLink.href = fileURL;
+        tempLink.setAttribute('download', 'client.xml');
+        tempLink.click();
     }
 
     onAddMasterWork = () => {
@@ -537,12 +551,38 @@ class DatabasePage extends React.Component
         }
     }
 
-        onGetDatabase = (e) => {
-            e.preventDefault();            
-            fetch(this.props.apiUrlGetAll)
+    onGetDatabase = (e) => {
+        e.preventDefault();            
+        fetch(this.props.apiUrlGetAll)
+        .then((res) => {
+            if (res.status === 200) {
+                return res.json();
+            }
+            if (res.status === 400) {
+                this.setState({
+                    error: "400"
+                });
+            }
+            return null;
+        }, function () {
+            this.setState({
+                error: "Что-то пошло не так. Попробуйте обновить страницу и повторить попытку"
+
+            });
+        }).then((data) => {
+            this.setState({
+                deserializeFile: data
+            });
+        });
+    }
+
+    onGetExcel = (e) => {
+        e.preventDefault();
+        fetch(this.props.apiUrlGetExcel)
             .then((res) => {
                 if (res.status === 200) {
-                    return res.json();
+                    var blob = res
+                    this.saveOrOpenBlob(blob);
                 }
                 if (res.status === 400) {
                     this.setState({
@@ -555,17 +595,25 @@ class DatabasePage extends React.Component
                     error: "Что-то пошло не так. Попробуйте обновить страницу и повторить попытку"
 
                 });
-            }).then((data) => {
-                this.setState({
-                    deserializeFile: data
-                });
-            });
-        }
+            })
+    };
+
+    saveOrOpenBlob = (blob) => {
+        var data = new Blob([blob], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        }),
+            fileURL = window.URL.createObjectURL(data),
+            tempLink = document.createElement('a');
+        tempLink.href = fileURL;
+        tempLink.setAttribute('download', 'client.xlsx');
+        tempLink.click();
+    }
 
     render() {
             return (               
             <div className={"invisible" + (this.props.databaseVisible ? "" : "_none")}>
-                <button bsStyle="primary" onClick={this.onGetDatabase}>Загрузить всё из базы</button>
+                    <button bsStyle="primary" onClick={this.onGetDatabase}>Загрузить всё из базы</button>
+                    <button bsStyle="primary" onClick={this.onGetExcel}>Excel</button>
             </div>
         );
     }
