@@ -8,6 +8,7 @@ var works = [];
 var equipments = [];
 var apiLoad = "home/api/load";
 var apiSave = "home/api/save";
+var apiSaveDatabase = "home/api/savedatabase";
 var apiGetAll = "home/api/getall";
 var apiGetExcel = "home/api/download";
 
@@ -114,9 +115,9 @@ class HomePage extends React.Component
         return (
             <div>
                 <h1>Карта технических работ</h1>
-                <button bsStyle = "primary" onClick = {this.onAddClick}>Создать новую карту </button>
-                <button bsStyle="primary" onClick={this.onLoadClick}>Загрузить созданную карту</button>
-                <button bsStyle="primary" onClick={this.onDatabaseClick}>Загрузить из базы</button>
+                <button className="top-button" onClick = {this.onAddClick}>Создать новую карту </button>
+                <button className="top-button" onClick={this.onLoadClick}>Загрузить созданную карту</button>
+                <button className="top-button" onClick={this.onDatabaseClick}>Загрузить из базы</button>
                 <BtnGroup
                     apiUrlLoad={apiLoad}
                     addVisible={this.state.addVisible}
@@ -125,6 +126,7 @@ class HomePage extends React.Component
                 <DataCollection
                     addVisible={this.state.addVisible}
                     apiUrlSave={apiSave}
+                    apiUrlSaveDatabase={apiSaveDatabase}
                 />
                 <DatabasePage
                     databaseVisible={this.state.databaseVisible}
@@ -154,7 +156,10 @@ class DataCollection extends React.Component {
             PerformDate: "",
             WorkList: [],
             RepairEquipments: [],
-            inputList:[]
+            inputList:[],
+            materialVisible: false,
+            workButtonText: "Добавить работу",
+            materialButtonText: "Добавить материал"
         };
     }
 
@@ -233,6 +238,31 @@ class DataCollection extends React.Component {
             console.log(typeof (this.state.RepairEquipments));
         }
     }
+    onDatabaseSaveClick = () => {
+        var data = JSON.stringify({
+            "ClientName": this.state.ClientName,
+            "ClientAddress": this.state.ClientAddress,
+            "PhoneNumber": this.state.PhoneNumber,
+            "Email": this.state.Email,
+            "Equipment": this.state.Equipment,
+            "Breakage": this.state.Breakage,
+            "MasterName": this.state.MasterName,
+            "MasterPersonnelNumber": this.state.MasterPersonnelNumber,
+            "PutDate": this.state.PutDate,
+            "PerformDate": this.state.PerformDate,
+            "WorkList": this.state.WorkList,
+            "RepairEquipments": this.state.RepairEquipments
+        });
+        var xhr = new XMLHttpRequest();
+        xhr.open("post", this.props.apiUrlSaveDatabase, true);
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                alert(xhr.responseText);
+            }
+        }
+        xhr.send(data); 
+    }
 
     onSaveClick = () => {
         
@@ -256,27 +286,30 @@ class DataCollection extends React.Component {
         xhr.onload = function (e) {            
             var blob = xhr.response;
             this.saveOrOpenBlob(blob);
-        }.bind(this)
+        }.bind(this);
         xhr.send(data);        
     }
     saveOrOpenBlob = (blob) => {
-        var data = new Blob([blob], { type: 'text/xml' }),        
-            fileURL = window.URL.createObjectURL(data),
-            tempLink = document.createElement('a');
-        tempLink.href = fileURL;
-        tempLink.setAttribute('download', 'client.xml');
+        var data = new Blob([blob], { type: "text/xml" }),        
+            fileUrl = window.URL.createObjectURL(data),
+            tempLink = document.createElement("a");
+        tempLink.href = fileUrl;
+        tempLink.setAttribute("download", "client.xml");
         tempLink.click();
     }
 
     onAddMasterWork = () => {
         this.setState({
-            numWorkList: this.state.numWorkList + 1 
+            numWorkList: this.state.numWorkList + 1,
+            workButtonText: "Добавить ещё"
         });
     }
 
     onAddRepairEquipments = () => {
         this.setState({
-            numEquipment: this.state.numEquipment + 1
+            numEquipment: this.state.numEquipment + 1,
+            materialVisible: true,
+            materialButtonText: "Добавить ещё"
         });
     }
     render() {
@@ -289,7 +322,7 @@ class DataCollection extends React.Component {
             equipmentList.push(<RepairEquipment key={i} number={i} updateRepairEquipment={this.updateRepairEquipment}/>);
         }
         return (
-            <div className={"invisible"+ (this.props.addVisible ? "" : "_none")}>
+            <div className={`visible${this.props.addVisible ? "" : "_none"}`}>
                 <div>
                     <br />
                     <h2>Информация о клиенте</h2>
@@ -316,7 +349,7 @@ class DataCollection extends React.Component {
                                 <td><input id="data-label" onChange={this.onChangeEquipment}></input></td>
                             </tr>
                             <tr>
-                                <td><label>Поломка: </label></td>
+                                <td><label>Причина сдачи: </label></td>
                                 <td><input id="data-label" onChange={this.onChangeBreakage}></input></td>
                             </tr>
                             <tr>
@@ -325,7 +358,7 @@ class DataCollection extends React.Component {
                             </tr>
                         </tbody>
                     </table>
-                    <h2>Информация о работах</h2>
+                    <h3>Информация о работах</h3>
                     <table>
                         <tbody>
                             <tr>
@@ -342,18 +375,15 @@ class DataCollection extends React.Component {
                             </tr>
                         </tbody>
                     </table>
-                    <h2>Выполненные работы</h2>
-                    <table>
+                    <h3>Выполненные работы</h3>
+                    <table style={{ marginBottom: "5px" }}>
                         <tbody>
                             {workList}
                         </tbody>
                     </table>
-                    <br />
-                    <button onClick={this.onAddMasterWork}>Добавить</button>
-                    <br />
-                    <br />
-                    <h2>Расходные материалы</h2>
-                    <table>
+                    <button onClick={this.onAddMasterWork}>{this.state.workButtonText}</button>
+                    <h3>Расходные материалы</h3>
+                    <table className={`visible-material${this.state.materialVisible ? "" : "-none"}`}>
                         <thead>
                             <tr>
                                 <td>Материал</td>
@@ -364,10 +394,10 @@ class DataCollection extends React.Component {
                             {equipmentList}
                         </tbody>
                     </table>
+                    <button onClick={this.onAddRepairEquipments}>{this.state.materialButtonText}</button>
                     <br />
-                    <button onClick={this.onAddRepairEquipments}>Добавить</button>
                     <br />
-                    <br />
+                    <button style={{ marginRight: "5px" }} onClick={this.onDatabaseSaveClick}>Сохранить</button>
                     <button onClick={this.onSaveClick}>Сохранить в файл</button>
                     
                 </div>
@@ -408,9 +438,9 @@ class BtnGroup extends React.Component {
     onClickLoad = (e) => {
         e.preventDefault();
         var formData = new FormData();
-        formData.append('file', this.state.file);
+        formData.append("file", this.state.file);
         fetch(this.props.apiUrlLoad, {
-            mode: 'no-cors',
+            mode: "no-cors",
             method: "POST",
             body: formData
         }).then((res) => {
@@ -440,7 +470,7 @@ class BtnGroup extends React.Component {
     render() {
         return (
             <div>
-                <form className={"invisible"+(this.props.loadVisible ? "" : "_none")} onSubmit={this.onClickLoad} enctype="multipart/form-data" style={{ marginBottom: "10px" }}>
+                <form className={`visible${this.props.loadVisible ? "" : "_none"}`} onSubmit={this.onClickLoad} enctype="multipart/form-data" style={{ marginBottom: "10px" }}>
                     <FormGroup>
                         <FormControl
                             type="file"
@@ -450,9 +480,8 @@ class BtnGroup extends React.Component {
                             onChange={this.onChangeFile} />
                     </FormGroup>
                     <Button bsStyle="primary" type="submit" disabled={!this.state.file}>Загрузить</Button>
-                    <div className={"invisible" + (this.state.invisible ? "" : "_none")}>
-                        <br />
-                        <h2>Информация о клиенте</h2>
+                    <div className={`visible${this.state.invisible ? "" : "_none"}`}>
+                        <h3>Информация о клиенте</h3>
                         <table>
                             <tbody>
                                 <tr>
@@ -476,7 +505,7 @@ class BtnGroup extends React.Component {
                                     <td>{this.state.deserializeFile.equipment}</td>
                                 </tr>
                                 <tr>
-                                    <td><label>Поломка: </label></td>
+                                    <td><label>Причина сдачи: </label></td>
                                     <td>{this.state.deserializeFile.breakage}</td>
                                 </tr>
                                 <tr>
@@ -485,7 +514,7 @@ class BtnGroup extends React.Component {
                                 </tr>
                             </tbody>
                         </table>
-                        <h2>Информация о работах</h2>
+                        <h3>Информация о работах</h3>
                         <table>
                             <tbody>
                                 <tr>
@@ -500,25 +529,43 @@ class BtnGroup extends React.Component {
                                     <td><label>Дата выполения: </label></td>
                                     <td>{this.state.deserializeFile.performDate.slice(0,10)}</td>
                                 </tr>
-                                    <td>Выполненные работы: </td>
-                                    {
-                                    this.state.deserializeFile.works.map((item,index) => {
-                                        return (
-                                            <tr>
-                                                <td>{index +1} </td>
-                                                <td>{item.name}</td>
-                                            </tr>
-                                        )})}
-                                    <td >Материалы:</td>
-                                    {
-                                        this.state.deserializeFile.repairEquipments.map((item, index) => {
-                                        return (
-                                            <tr>
-                                                <td>{index + 1} </td>
-                                                <td>{item.name}</td>
-                                                <td>{item.count}</td>
-                                            </tr>
-                                        )})}
+                            </tbody>
+                        </table>
+                        <h3>Выполненные работы: </h3>
+                        <table>
+                            <tbody>
+                        {
+                        this.state.deserializeFile.works.map((item,index) => {
+                            return (
+                                <tr>
+                                    <td>{index +1}. </td>
+                                    <td>{item.name}</td>
+                                </tr>
+                            )})
+                        }
+                            </tbody>
+                        </table>
+                        <h3>Материалы:</h3>
+                        <table className="material-table">
+                            <thead>
+                                <tr>
+                                    <td id="number">№</td>
+                                    <td>Материал</td>
+                                    <td>Количество</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {
+                            this.state.deserializeFile.repairEquipments.map((item, index) => {
+                                return (
+                                    
+                                <tr id="item">
+                                    <td id="number">{index + 1}. </td>
+                                    <td style={{marginRight:"10px" }}>{item.name}</td>
+                                    <td>{item.count} шт.</td>
+                                </tr>
+                                );
+                            })}
                             </tbody>
                         </table>
                     </div>
@@ -548,7 +595,7 @@ class DatabasePage extends React.Component
                 workList: [],
                 repairEquipments: []
             }
-        }
+        };
     }
 
     onGetDatabase = (e) => {
@@ -588,24 +635,24 @@ class DatabasePage extends React.Component
                 a.style = "display: none";
                 let url = window.URL.createObjectURL(xlsxBlob);
                 a.href = url;
-                a.setAttribute('download', 'clients.xlsx');
+                a.setAttribute("download", "clients.xlsx");
                 a.click();
             });
     };
 
     saveOrOpenBlob = (blob) => {
         var data = new Blob([blob], {
-            type: 'application/otcet-stream'
+            type: "application/otcet-stream"
         }),
             fileURL = window.URL.createObjectURL(data),
-            tempLink = document.createElement('a');
+            tempLink = document.createElement("a");
         tempLink.href = fileURL;
         tempLink.click();
     }
 
     render() {
             return (               
-            <div className={"invisible" + (this.props.databaseVisible ? "" : "_none")}>
+            <div className={`visible${this.props.databaseVisible ? "" : "_none"}`}>
                     <button bsStyle="primary" onClick={this.onGetDatabase}>Загрузить всё из базы</button>
                     <button bsStyle="primary" onClick={this.onGetExcel}>Excel</button>
             </div>

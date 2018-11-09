@@ -21,12 +21,51 @@
 input[type=date] {
     min-width: 145px;
 }
-.invisible {
+.visible {
     display: block;
+    margin-top: 30px;
 }
-.invisible_none {
+.visible_none {
     display: none;
 }
-button {
-    margin-right: 10px;
+.top-button {
+    position: relative;
+    display: inline-block;
+    margin-right: 5px;
+    line-height: 2em;
+    vertical-align: middle;
+    text-align: center;
+    text-decoration: none;
+    color: #000;
+    outline: none;
+    border-radius: 5px;
+    box-shadow: 0 0 0 1px #ddd inset, 0 1px 1px #fff;
+}
+.top-button:hover {
+    background: #dcdcdc linear-gradient(#fff, #dcdcdc);
+    box-shadow: 0 0 0 1px #aaa inset, 0 1px 1px #aaa;
+}
+.top-button:active {
+    background: none;
+    box-shadow: 0 0 0 1px #bbb inset, 0 1px 3px rgba(0,0,0,.5) inset, 0 1px 2px #fff;
+}
+
+.material-table td {
+    min-width: 100px;
+}
+.material-table #item td{
+    width: 100px;
+
+}
+td #number {
+    max-width: 30px;
+}
+
+.visible-material {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.visible-material-none {
+    display: none;
 }

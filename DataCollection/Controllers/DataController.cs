@@ -72,6 +72,14 @@ namespace DataCollection.Controllers
             return this.File(ms, fileType, fileName);
         }
 
+        [HttpPost]
+        public IActionResult SaveDatabase([FromBody] ClientCardFromBody clientCardFromBody)
+        {
+            var clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
+            this.dbService.AddClientCardWithContext(clientCard, this.context);
+            return this.Ok("Saved");
+        }
+
         [HttpGet]
         public IActionResult GetAll()
         {
