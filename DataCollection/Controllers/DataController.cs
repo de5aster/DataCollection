@@ -9,6 +9,9 @@ using DataCollectionService.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
+using Microsoft.AspNetCore.Hosting.Internal;
+using OfficeOpenXml.Table;
 
 namespace DataCollection.Controllers
 {
@@ -69,20 +72,33 @@ namespace DataCollection.Controllers
             var bytes = this.encode.GetBytes(xmlData);
             ms.Write(bytes, 0, bytes.Length);
             ms.Position = 0;
-            return this.File(ms, fileType);
+            return this.File(ms, fileType, fileName);
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-           var clientCardList = this.dbService.GetAllClientCardsWithContext(this.context);
+           var clientCards = this.dbService.GetAllClientCardsWithContext(this.context);
             var d = new List<ClientCardFromBody>();
-            foreach (var client in clientCardList)
+            foreach (var client in clientCards)
             {
                 d.Add(ClientCardFromBody.ConvertToClientCardFromBody(client));
             }
 
             return this.Ok(d);
+        }
+
+        [HttpGet]
+        public ActionResult Download()
+        {
+            var clientCards = this.dbService.GetAllClientCardsWithContext(this.context);
+            byte[] bytes;
+            using (var package = ExcelPackageService.CreateExcelPackage(clientCards))
+            {
+                bytes = package.GetAsByteArray();
+            }
+
+            return this.File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "clients.xlsx");
         }
     }
 }

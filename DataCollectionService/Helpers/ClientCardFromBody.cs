@@ -10,7 +10,7 @@ namespace DataCollectionService.Helpers
         {
         }
 
-        public ClientCardFromBody(string clientName, string clientAddress, string phoneNumber, string email, string equipment, string breakage, string masterName, string masterPersonnelNumber, DateTime putDate, DateTime performData, string[] workList, string[][] repairEquipments)
+        public ClientCardFromBody(string clientName, string clientAddress, string phoneNumber, string email, string equipment, string breakage, string masterName, string masterPersonnelNumber, DateTime putDate, DateTime performDate, string[] workList, string[][] repairEquipments)
         {
             this.ClientName = clientName.Trim();
             this.ClientAddress = clientAddress.Trim();
@@ -21,7 +21,7 @@ namespace DataCollectionService.Helpers
             this.MasterName = masterName.Trim();
             this.MasterPersonnelNumber = masterPersonnelNumber.Trim();
             this.PutDate = putDate;
-            this.PerformData = performData;
+            this.PerformDate = performDate;
             this.WorkList = workList;
             this.RepairEquipments = repairEquipments;
         }
@@ -44,7 +44,7 @@ namespace DataCollectionService.Helpers
 
         public DateTime PutDate { get; set; }
 
-        public DateTime PerformData { get; set; }
+        public DateTime PerformDate { get; set; }
 
         public string[] WorkList { get; set; }
 
@@ -63,7 +63,7 @@ namespace DataCollectionService.Helpers
                 MasterName = client.MasterName,
                 MasterPersonnelNumber = client.MasterPersonnelNumber,
                 PutDate = client.PutDate,
-                PerformData = client.PerformData,
+                PerformDate = client.PerformDate,
                 WorkList = AddWork(client.Works),
                 RepairEquipments = AddRepairEquipments(client.RepairEquipments)
             };

@@ -151,7 +151,7 @@ class DataCollection extends React.Component {
             MasterName: "",
             MasterPersonnelNumber: "",
             PutDate: "",
-            PerformData: "",
+            PerformDate: "",
             WorkList: [],
             RepairEquipments: [],
             inputList:[]
@@ -204,9 +204,9 @@ class DataCollection extends React.Component {
             MasterPersonnelNumber : e.target.value
         });
     }
-    onChangePerformData = (e) => {
+    onChangePerformDate = (e) => {
         this.setState({
-            PerformData : e.target.value
+            PerformDate : e.target.value
         });
     }
     
@@ -246,7 +246,7 @@ class DataCollection extends React.Component {
             "MasterName": this.state.MasterName,
             "MasterPersonnelNumber": this.state.MasterPersonnelNumber,
             "PutDate": this.state.PutDate,
-            "PerformData": this.state.PerformData,
+            "PerformDate": this.state.PerformDate,
             "WorkList": this.state.WorkList,
             "RepairEquipments": this.state.RepairEquipments
         });
@@ -338,7 +338,7 @@ class DataCollection extends React.Component {
                             </tr>
                             <tr>
                                 <td><label>Дата выполения: </label></td>
-                                <td><input type="date" onChange={this.onChangePerformData}></input></td>
+                                <td><input type="date" onChange={this.onChangePerformDate}></input></td>
                             </tr>
                         </tbody>
                     </table>
@@ -391,7 +391,7 @@ class BtnGroup extends React.Component {
                 masterName: "",
                 masterPersonnelNumber: "",
                 putDate: "",
-                performData: "",
+                performDate: "",
                 works:[],
                 repairEquipments: []
             }
@@ -498,7 +498,7 @@ class BtnGroup extends React.Component {
                                 </tr>
                                 <tr>
                                     <td><label>Дата выполения: </label></td>
-                                    <td>{this.state.deserializeFile.performData.slice(0,10)}</td>
+                                    <td>{this.state.deserializeFile.performDate.slice(0,10)}</td>
                                 </tr>
                                     <td>Выполненные работы: </td>
                                     {
@@ -544,7 +544,7 @@ class DatabasePage extends React.Component
                 masterName: "",
                 masterPersonnelNumber: "",
                 putDate: "",
-                performData: "",
+                performDate: "",
                 workList: [],
                 repairEquipments: []
             }
@@ -579,33 +579,27 @@ class DatabasePage extends React.Component
     onGetExcel = (e) => {
         e.preventDefault();
         fetch(this.props.apiUrlGetExcel)
-            .then((res) => {
-                if (res.status === 200) {
-                    var blob = res
-                    this.saveOrOpenBlob(blob);
-                }
-                if (res.status === 400) {
-                    this.setState({
-                        error: "400"
-                    });
-                }
-                return null;
-            }, function () {
-                this.setState({
-                    error: "Что-то пошло не так. Попробуйте обновить страницу и повторить попытку"
-
-                });
+            .then(function(response) {
+                return response.blob();
             })
+            .then(function (xlsxBlob) {
+                var a = document.createElement("a");
+                document.body.appendChild(a);
+                a.style = "display: none";
+                let url = window.URL.createObjectURL(xlsxBlob);
+                a.href = url;
+                a.setAttribute('download', 'clients.xlsx');
+                a.click();
+            });
     };
 
     saveOrOpenBlob = (blob) => {
         var data = new Blob([blob], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            type: 'application/otcet-stream'
         }),
             fileURL = window.URL.createObjectURL(data),
             tempLink = document.createElement('a');
         tempLink.href = fileURL;
-        tempLink.setAttribute('download', 'client.xlsx');
         tempLink.click();
     }
 

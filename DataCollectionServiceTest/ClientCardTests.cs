@@ -35,7 +35,7 @@ namespace DataCollectionServiceTest
             MasterName = "Sergey",
             MasterPersonnelNumber = "123",
             PutDate = new DateTime(2018, 01, 01),
-            PerformData = new DateTime(2018, 03, 01),
+            PerformDate = new DateTime(2018, 03, 01),
             Works = new List<Work> { new Work("sr") },
             RepairEquipments = new List<RepairEquipment> { new RepairEquipment("resistor1", 10), new RepairEquipment("resistor2", 15) }
         };

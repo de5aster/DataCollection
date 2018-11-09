@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DataCollectionService.Helpers;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataCollectionService.Entities
 {
@@ -32,7 +31,7 @@ namespace DataCollectionService.Entities
 
         public DateTime PutDate { get; set; }
 
-        public DateTime PerformData { get; set; }
+        public DateTime PerformDate { get; set; }
 
         public virtual List<Work> Works { get; set; } = new List<Work>();
 
@@ -52,7 +51,7 @@ namespace DataCollectionService.Entities
                 MasterName = client.MasterName.Trim(),
                 MasterPersonnelNumber = client.MasterPersonnelNumber.Trim(),
                 PutDate = client.PutDate,
-                PerformData = client.PerformData,
+                PerformDate = client.PerformDate,
                 Works = ConvertToWorks(client.WorkList),
                 RepairEquipments = ConvertToRepairEquipment(client.RepairEquipments)
             };
