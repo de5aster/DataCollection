@@ -69,9 +69,9 @@ namespace DataCollectionService.Helpers
             };
         }
 
-        private static string[] AddWork(List<Work> workList)
+        private static string[] AddWork(IReadOnlyCollection<Work> workList)
         {
-            string[] works = new string[workList.Count];
+            var works = new string[workList.Count];
             var index = 0;
             foreach (var work in workList)
             {
@@ -82,7 +82,7 @@ namespace DataCollectionService.Helpers
             return works;
         }
 
-        private static string[][] AddRepairEquipments(List<RepairEquipment> repairEquipmentList)
+        private static string[][] AddRepairEquipments(IReadOnlyCollection<RepairEquipment> repairEquipmentList)
         {
             var equips = new string[repairEquipmentList.Count][];
             var index = 0;

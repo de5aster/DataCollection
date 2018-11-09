@@ -9,9 +9,6 @@ using DataCollectionService.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OfficeOpenXml;
-using Microsoft.AspNetCore.Hosting.Internal;
-using OfficeOpenXml.Table;
 
 namespace DataCollection.Controllers
 {
@@ -19,9 +16,9 @@ namespace DataCollection.Controllers
     public class DataController : Controller
     {
         private readonly Encoding encode = Encoding.UTF8;
-        private DbContextOptions<ClientCardContext> options;
-        private ClientCardContext context;
-        private ClientCardDatabaseService dbService;
+        private readonly ClientCardContext context;
+        private readonly ClientCardDatabaseService dbService;
+        private readonly DbContextOptions<ClientCardContext> options;
 
         public DataController()
         {
@@ -38,7 +35,7 @@ namespace DataCollection.Controllers
         public async Task<IActionResult> Load(IFormFile file)
         {
             var filePath = Path.GetTempFileName();
-            string str = string.Empty;
+            var str = string.Empty;
             try
             {
                 if (file.Length > 0)

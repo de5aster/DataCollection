@@ -9,7 +9,7 @@ namespace DataCollectionService.Services
 {
     public class ClientCardDatabaseService
     {
-        private DbContextOptions<ClientCardContext> options;
+        private readonly DbContextOptions<ClientCardContext> options;
 
         public ClientCardDatabaseService(DbContextOptions<ClientCardContext> options)
         {

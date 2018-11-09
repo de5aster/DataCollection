@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataCollectionService.Entities
 {
-    public class ClientCardContext : DbContext
+    public sealed class ClientCardContext : DbContext
     {
         public ClientCardContext()
            : base()

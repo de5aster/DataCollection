@@ -57,7 +57,7 @@ namespace DataCollectionService.Entities
             };
         }
 
-        private static List<Work> ConvertToWorks(string[] works)
+        private static List<Work> ConvertToWorks(IEnumerable<string> works)
         {
             var workList = new List<Work>();
             foreach (var work in works)
@@ -68,7 +68,7 @@ namespace DataCollectionService.Entities
             return workList;
         }
 
-        private static List<RepairEquipment> ConvertToRepairEquipment(string[][] equips)
+        private static List<RepairEquipment> ConvertToRepairEquipment(IEnumerable<string[]> equips)
         {
             var repairEquips = new List<RepairEquipment>();
             foreach (var equip in equips)

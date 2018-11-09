@@ -38,7 +38,7 @@ namespace DataCollectionService.Helpers
 
         public static List<ClientCardForExcel> ConvertToListClientCardForExcel(IList<ClientCard> clientCards)
         {
-            List<ClientCardForExcel> result = new List<ClientCardForExcel>();
+            var result = new List<ClientCardForExcel>();
             foreach (var clientCard in clientCards)
             {
                 result.Add(ConvertToClientCardForExcel(clientCard));
@@ -67,20 +67,20 @@ namespace DataCollectionService.Helpers
             };
         }
 
-        private static string ConvertRepairEquipmentsToString(List<RepairEquipment> repairEquipments)
+        private static string ConvertRepairEquipmentsToString(IEnumerable<RepairEquipment> repairEquipments)
         {
-            string result = "";
+            var result = "";
             foreach (var equip in repairEquipments)
             {
-                result += equip.Name + " - " + equip.Count.ToString() + Environment.NewLine;
+                result += equip.Name + " - " + equip.Count + Environment.NewLine;
             }
 
             return result.Trim();
         }
 
-        private static string ConvertWorksToString(List<Work> works)
+        private static string ConvertWorksToString(IEnumerable<Work> works)
         {
-            string worksString = "";
+            var worksString = "";
             foreach (var work in works)
             {
                 worksString += work.Name + Environment.NewLine;

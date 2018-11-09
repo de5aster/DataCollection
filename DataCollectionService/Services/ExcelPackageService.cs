@@ -1,16 +1,12 @@
-﻿using DataCollectionService.Entities;
+﻿using System.Collections.Generic;
+using DataCollectionService.Entities;
 using DataCollectionService.Helpers;
 using OfficeOpenXml;
 using OfficeOpenXml.Table;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataCollectionService.Services
 {
-   public class ExcelPackageService
+    public class ExcelPackageService
     {
         public static ExcelPackage CreateExcelPackage(IList<ClientCard> clientCards)
         {
@@ -35,9 +31,9 @@ namespace DataCollectionService.Services
             worksheet.Cells[1, 12].Value = "Work";
             worksheet.Cells[1, 13].Value = "RepairEquips";
 
-            //Add values
-            var numberformat = "#,##0";
-            var dataCellStyleName = "TableNumber";
+            // Add values
+            const string numberformat = "#,##0";
+            const string dataCellStyleName = "TableNumber";
             var numStyle = package.Workbook.Styles.CreateNamedStyle(dataCellStyleName);
             numStyle.Style.Numberformat.Format = numberformat;
             worksheet.Cells["A2"].LoadFromCollection(clientCardsExcel);
@@ -48,7 +44,6 @@ namespace DataCollectionService.Services
             var tbl = worksheet.Tables.Add(new ExcelAddressBase(fromRow: 1, fromCol: 1, toRow: clientCardsExcel.Count + 1, toColumn: 13), "Data");
             tbl.ShowHeader = true;
             tbl.TableStyle = TableStyles.Dark9;
-
 
             // AutoFitColumns
             worksheet.Cells[1, 1, clientCardsExcel.Count, 13].AutoFitColumns();
