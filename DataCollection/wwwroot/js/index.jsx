@@ -575,7 +575,7 @@ class DataCollection extends React.Component {
                     <br />
                     <br />
                     <Button style={{ marginRight: "5px" }} onClick={this.onDatabaseSaveClick}>Сохранить</Button>
-                    <Button onClick={this.onSaveClick}>Сохранить в файл</Button>
+                    <Button style={{ marginRight: "5px" }} onClick={this.onSaveClick}>Сохранить в файл</Button>
                     <Button onClick={this.onClearClick}>Очистить форму</Button>
                     
                 </div>

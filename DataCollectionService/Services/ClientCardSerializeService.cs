@@ -15,7 +15,7 @@ namespace DataCollectionService.Services
             {
                 Serializer.Serialize(ms, data);
                 ms.Position = 0;
-                return encode.GetString(ms.GetBuffer());
+                return encode.GetString(ms.GetBuffer()).Trim();
             }
         }
 
