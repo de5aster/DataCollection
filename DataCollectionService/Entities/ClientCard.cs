@@ -13,6 +13,8 @@ namespace DataCollectionService.Entities
 
         public Guid Id { get; set; }
 
+        public int ContractId { get; set; }
+
         public string ClientName { get; set; }
 
         public string ClientAddress { get; set; }
@@ -42,6 +44,7 @@ namespace DataCollectionService.Entities
             return new ClientCard
             {
                 Id = Guid.NewGuid(),
+                ContractId = client.ContractId,
                 ClientName = client.ClientName.Trim(),
                 ClientAddress = client.ClientAddress.Trim(),
                 PhoneNumber = client.PhoneNumber.Trim(),

@@ -10,8 +10,9 @@ namespace DataCollectionService.Helpers
         {
         }
 
-        public ClientCardFromBody(string clientName, string clientAddress, string phoneNumber, string email, string equipment, string breakage, string masterName, string masterPersonnelNumber, DateTime putDate, DateTime performDate, string[] workList, string[][] repairEquipments)
+        public ClientCardFromBody(string contractId, string clientName, string clientAddress, string phoneNumber, string email, string equipment, string breakage, string masterName, string masterPersonnelNumber, DateTime putDate, DateTime performDate, string[] workList, string[][] repairEquipments)
         {
+            this.ContractId = Convert.ToInt32(contractId);
             this.ClientName = clientName.Trim();
             this.ClientAddress = clientAddress.Trim();
             this.PhoneNumber = phoneNumber.Trim();
@@ -25,6 +26,8 @@ namespace DataCollectionService.Helpers
             this.WorkList = workList;
             this.RepairEquipments = repairEquipments;
         }
+
+        public int ContractId { get; set; }
 
         public string ClientName { get; set; }
 
@@ -54,6 +57,7 @@ namespace DataCollectionService.Helpers
         {
             return new ClientCardFromBody
             {
+                ContractId = client.ContractId,
                 ClientName = client.ClientName,
                 ClientAddress = client.ClientAddress,
                 PhoneNumber = client.PhoneNumber,

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <ClientCard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Id>00000000-0000-0000-0000-000000000000</Id>
+  <ContractId>1</ContractId>
   <ClientName>Антон</ClientName>
   <ClientAddress>Ekb</ClientAddress>
   <PhoneNumber>89122221408</PhoneNumber>

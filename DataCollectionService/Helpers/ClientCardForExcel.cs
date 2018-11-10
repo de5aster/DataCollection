@@ -12,6 +12,8 @@ namespace DataCollectionService.Helpers
 
         public Guid CardId { get; set; }
 
+        public int ContractId { get; set; }
+
         public string ClientName { get; set; }
 
         public string ClientAddress { get; set; }
@@ -52,6 +54,7 @@ namespace DataCollectionService.Helpers
             return new ClientCardForExcel()
             {
                 CardId = clientCard.Id,
+                ContractId = clientCard.ContractId,
                 ClientName = clientCard.ClientName,
                 ClientAddress = clientCard.ClientAddress,
                 PhoneNumber = clientCard.PhoneNumber,

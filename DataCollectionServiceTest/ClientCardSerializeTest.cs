@@ -12,7 +12,8 @@ namespace DataCollectionServiceTest
     [TestFixture]
     public class ClientCardSerializeTest
     {
-        private static ClientCardFromBody clientCardFromBody = new ClientCardFromBody(
+        private static readonly ClientCardFromBody ClientCardFromBody = new ClientCardFromBody(
+            "1",
             "Антон",
             "Ekb",
             "89122221408",
@@ -26,15 +27,14 @@ namespace DataCollectionServiceTest
             new string[] { "sr" },
             new string[][] { new string[] { "resistor1", "10" }, new string[] { "resistor2", "15" } });
 
-        private Guid defaultGuidId = new Guid("00000000-0000-0000-0000-000000000000");
-        private ClientCard clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
+        private readonly Guid defaultGuidId = new Guid("00000000-0000-0000-0000-000000000000");
+        private readonly ClientCard clientCard = ClientCard.ConvertToClientCard(ClientCardFromBody);
 
         [Test]
         public void CanSerializeDataToXml()
         {
             this.clientCard.Id = this.defaultGuidId;
-            var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers\\Files\\");
-            var encode = Encoding.GetEncoding(1251);
+            var encode = Encoding.UTF8;
             var xmlData = ClientCardSerializeService.SerializeDataToXml(this.clientCard, encode);
             var dataFromXml = ClientCardSerializeService.DeserializeDataFromXml(xmlData, encode);
             xmlData.Should().BeOfType<string>();
@@ -48,7 +48,7 @@ namespace DataCollectionServiceTest
             this.clientCard.Works[0].WorkId = this.defaultGuidId;
             this.clientCard.RepairEquipments[0].Id = this.defaultGuidId;
             this.clientCard.RepairEquipments[1].Id = this.defaultGuidId;
-            var encode = Encoding.GetEncoding(1251);
+            var encode = Encoding.UTF8;
             var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers\\Files\\data.xml");
             var file = File.ReadAllLines(filePath, encode);
             string stringFile = ClientCardSerializeService.ConvertToString(file);

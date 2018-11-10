@@ -140,6 +140,7 @@
     <Compile Include="Entities\ClientCardContext.cs" />
     <Compile Include="Entities\RepairEquipment.cs" />
     <Compile Include="Entities\Work.cs" />
+    <Compile Include="Exceptions\DatabaseException.cs" />
     <Compile Include="Helpers\ClientCardForExcel.cs" />
     <Compile Include="Helpers\ClientCardFromBody.cs" />
     <Compile Include="Services\ClientCardDatabaseService.cs" />

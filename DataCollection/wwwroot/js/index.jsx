@@ -7,6 +7,7 @@ var apiSave = "home/api/save";
 var apiSaveDatabase = "home/api/savedatabase";
 var apiGetAll = "home/api/getall";
 var apiGetExcel = "home/api/download";
+var apiGetContractCount = "home/api/getcontractcount";
 
 class MasterWork extends React.Component {
     constructor(props) {
@@ -98,7 +99,8 @@ class HomePage extends React.Component
             addVisible: false,
             loadVisible: false,
             databaseVisible: false,
-            activeNav: "0"
+            activeNav: "0",
+            contractCount: ""
         };
     }
     onAddClick = (e) => {
@@ -108,7 +110,32 @@ class HomePage extends React.Component
             loadVisible: false,
             databaseVisible: false
         }));
+        this.onGetContractCount();
     }
+    onGetContractCount = () => {
+        fetch(apiGetContractCount)
+            .then((res) => {
+                if (res.status === 200) {
+                    return res.json();
+                }
+                if (res.status === 400) {
+                    this.setState({
+                        error: "400"
+                    });
+                }
+                return null;
+            }, function () {
+                this.setState({
+                    error: "Что-то пошло не так. Попробуйте обновить страницу и повторить попытку"
+
+                });
+            }).then((data) => {
+                this.setState({
+                    contractCount: data + 1
+                });
+            });
+    }
+
     onLoadClick = (e) => {
         e.preventDefault();
         this.setState(() => ({
@@ -156,6 +183,7 @@ class HomePage extends React.Component
                     addVisible={this.state.addVisible}
                     apiUrlSave={apiSave}
                     apiUrlSaveDatabase={apiSaveDatabase}
+                    contractCount={this.state.contractCount}
                 />
                 <DatabasePage
                     databaseVisible={this.state.databaseVisible}
@@ -173,6 +201,7 @@ class DataCollection extends React.Component {
         this.state = {
             numEquipment: 0,
             numWorkList: 0,
+            ContractId: 0,
             ClientName: "",
             ClientAddress: "",
             PhoneNumber: "",
@@ -269,6 +298,7 @@ class DataCollection extends React.Component {
     }
     onDatabaseSaveClick = () => {
         var data = JSON.stringify({
+            "ContractId": this.props.contractCount,
             "ClientName": this.state.ClientName,
             "ClientAddress": this.state.ClientAddress,
             "PhoneNumber": this.state.PhoneNumber,
@@ -289,6 +319,9 @@ class DataCollection extends React.Component {
             if (xhr.status === 200) {
                 alert(xhr.responseText);
             }
+            if (xhr.status === 409) {
+                alert("ContractId already exists");
+            }
         }
         xhr.send(data); 
     }
@@ -296,6 +329,7 @@ class DataCollection extends React.Component {
     onSaveClick = () => {
         
         var data = JSON.stringify({
+            "ContractId": this.props.contractCount,
             "ClientName": this.state.ClientName,
             "ClientAddress": this.state.ClientAddress,
             "PhoneNumber": this.state.PhoneNumber,
@@ -356,6 +390,10 @@ class DataCollection extends React.Component {
                     <h3>Информация о клиенте</h3>
                     <table>
                         <tbody>
+                        <tr>
+                            <td id="tbl-lbl"><ControlLabel>Номер заказа: </ControlLabel></td>
+                            <td id="data-label"><label id="data-label">{this.props.contractCount}</label></td>
+                        </tr>
                             <tr>
                                 <td id="tbl-lbl"><ControlLabel>ФИО Заказчика: </ControlLabel></td>
                                 <td id="data-label"><FormControl id="data-label"

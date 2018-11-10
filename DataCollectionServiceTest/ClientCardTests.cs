@@ -11,6 +11,7 @@ namespace DataCollectionServiceTest
     public class ClientCardTests
     {
         private ClientCardFromBody clientCardFromBody = new ClientCardFromBody(
+            "1",
             "Антон",
             "ЕКБ",
             "8",
@@ -26,6 +27,7 @@ namespace DataCollectionServiceTest
 
         private ClientCard client = new ClientCard
         {
+            ContractId = 1,
             ClientName = "Антон",
             ClientAddress = "ЕКБ",
             PhoneNumber = "8",

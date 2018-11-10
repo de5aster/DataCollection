@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DataCollectionService.Entities;
 using DataCollectionService.Helpers;
 using OfficeOpenXml;
@@ -18,18 +19,19 @@ namespace DataCollectionService.Services
             package.Workbook.Properties.Keywords = "ClientCard";
             var worksheet = package.Workbook.Worksheets.Add("ClientCards");
             worksheet.Cells[1, 1].Value = "CardId";
-            worksheet.Cells[1, 2].Value = "ClientName";
-            worksheet.Cells[1, 3].Value = "ClientAdress";
-            worksheet.Cells[1, 4].Value = "Phone";
-            worksheet.Cells[1, 5].Value = "E-mail";
-            worksheet.Cells[1, 6].Value = "Equips";
-            worksheet.Cells[1, 7].Value = "Breackage";
-            worksheet.Cells[1, 8].Value = "MasterName";
-            worksheet.Cells[1, 9].Value = "MasterNumber";
-            worksheet.Cells[1, 10].Value = "PutDate";
-            worksheet.Cells[1, 11].Value = "PerformDate";
-            worksheet.Cells[1, 12].Value = "Work";
-            worksheet.Cells[1, 13].Value = "RepairEquips";
+            worksheet.Cells[1, 2].Value = "ContractId";
+            worksheet.Cells[1, 3].Value = "ClientName";
+            worksheet.Cells[1, 4].Value = "ClientAdress";
+            worksheet.Cells[1, 5].Value = "Phone";
+            worksheet.Cells[1, 6].Value = "E-mail";
+            worksheet.Cells[1, 7].Value = "Equips";
+            worksheet.Cells[1, 8].Value = "Breackage";
+            worksheet.Cells[1, 9].Value = "MasterName";
+            worksheet.Cells[1, 10].Value = "MasterNumber";
+            worksheet.Cells[1, 11].Value = "PutDate";
+            worksheet.Cells[1, 12].Value = "PerformDate";
+            worksheet.Cells[1, 13].Value = "Work";
+            worksheet.Cells[1, 14].Value = "RepairEquips";
 
             // Add values
             const string numberformat = "#,##0";
@@ -37,18 +39,18 @@ namespace DataCollectionService.Services
             var numStyle = package.Workbook.Styles.CreateNamedStyle(dataCellStyleName);
             numStyle.Style.Numberformat.Format = numberformat;
             worksheet.Cells["A2"].LoadFromCollection(clientCardsExcel);
-            worksheet.Cells[2, 10, 2 + clientCardsExcel.Count, 10].Style.Numberformat.Format = "dd-mm-yyyy";
-            worksheet.Cells[2, 11, 2 + clientCardsExcel.Count, 11].Style.Numberformat.Format = "dd-mm-yyyy";
+            worksheet.Cells[2, 10, 2 + clientCardsExcel.Count, 11].Style.Numberformat.Format = "dd-mm-yyyy";
+            worksheet.Cells[2, 11, 2 + clientCardsExcel.Count, 12].Style.Numberformat.Format = "dd-mm-yyyy";
 
-            // Add to table / Add summary row
-            var tbl = worksheet.Tables.Add(new ExcelAddressBase(fromRow: 1, fromCol: 1, toRow: clientCardsExcel.Count + 1, toColumn: 13), "Data");
+            // Add to table style
+            var tbl = worksheet.Tables.Add(new ExcelAddressBase(fromRow: 1, fromCol: 1, toRow: clientCardsExcel.Count + 1, toColumn: 14), "Data");
             tbl.ShowHeader = true;
             tbl.TableStyle = TableStyles.Dark9;
 
-            // AutoFitColumns
+            // AutoFitColumns and Wraptext
             worksheet.Cells[1, 1, clientCardsExcel.Count, 13].AutoFitColumns();
-            worksheet.Cells[2, 12, 2 + clientCardsExcel.Count, 12].Style.WrapText = true;
-            worksheet.Cells[2, 13, 2 + clientCardsExcel.Count, 13].Style.WrapText = true;
+            worksheet.Cells[2, 13, 2 + clientCardsExcel.Count, 12].Style.WrapText = true;
+            worksheet.Cells[2, 14, 2 + clientCardsExcel.Count, 13].Style.WrapText = true;
             return package;
         }
     }

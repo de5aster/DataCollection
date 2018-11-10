@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DataCollectionService.Entities;
-using DataCollectionService.Helpers;
+using DataCollectionService.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataCollectionService.Services
@@ -44,14 +44,28 @@ namespace DataCollectionService.Services
 
         public void AddClientCardWithContext(ClientCard clientCard, ClientCardContext context)
         {
-            context.Add(clientCard);
-            context.SaveChanges();
+            var res = context.ClientCards.FirstOrDefault(p => p.ContractId == clientCard.ContractId);
+            if (res == null)
+            {
+                context.Add(clientCard);
+                context.SaveChanges();
+            }
+            else
+            {
+                throw new DatabaseException("ContractId already exists");
+            }
         }
 
-        public List<ClientCard> GetAllClientCardsWithContext(ClientCardContext context)
+        public IList<ClientCard> GetAllClientCardsWithContext(ClientCardContext context)
         {
             var clientCards = context.ClientCards.ToList();
-            return clientCards;
+            var orderedEnumerable = clientCards.OrderBy(c => c.ContractId).Select(c => c).ToList();
+            return orderedEnumerable;
+        }
+
+        public int GetContractCountWithContext(ClientCardContext context)
+        {
+            return context.ClientCards.Count();
         }
     }
 }

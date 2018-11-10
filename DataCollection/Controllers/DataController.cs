@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using DataCollectionService.Entities;
+using DataCollectionService.Exceptions;
 using DataCollectionService.Helpers;
 using DataCollectionService.Services;
 using Microsoft.AspNetCore.Http;
@@ -36,25 +36,18 @@ namespace DataCollection.Controllers
         {
             var filePath = Path.GetTempFileName();
             var str = string.Empty;
-            try
+            if (file.Length > 0)
             {
-                if (file.Length > 0)
+                using (var stream = new MemoryStream())
                 {
-                    using (var stream = new MemoryStream())
-                    {
-                        await file.CopyToAsync(stream);
-                        str = this.encode.GetString(stream.GetBuffer());
-                    }
-
-                   return this.Ok(ClientCardSerializeService.DeserializeDataFromXml(str, this.encode));
+                    await file.CopyToAsync(stream);
+                    str = this.encode.GetString(stream.GetBuffer());
                 }
 
-                return this.BadRequest("Don't deserialize file");
+               return this.Ok(ClientCardSerializeService.DeserializeDataFromXml(str, this.encode));
             }
-            catch (Exception ex)
-            {
-                return this.BadRequest(ex.Message);
-            }
+
+            return this.BadRequest("Don't deserialize file");
         }
 
         [HttpPost]
@@ -63,21 +56,27 @@ namespace DataCollection.Controllers
             const string fileType = "application/otcet-stream";
             const string fileName = "client.xml";
             var clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
-            this.dbService.AddClientCardWithContext(clientCard, this.context);
             var xmlData = ClientCardSerializeService.SerializeDataToXml(clientCard, this.encode);
-            var ms = new MemoryStream();
+            //var ms = new MemoryStream();
             var bytes = this.encode.GetBytes(xmlData);
-            ms.Write(bytes, 0, bytes.Length);
-            ms.Position = 0;
-            return this.File(ms, fileType, fileName);
+            //ms.Write(bytes, 0, bytes.Length);
+            //ms.Position = 0;
+            return this.File(bytes, fileType, fileName);
         }
 
         [HttpPost]
         public IActionResult SaveDatabase([FromBody] ClientCardFromBody clientCardFromBody)
         {
             var clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
-            this.dbService.AddClientCardWithContext(clientCard, this.context);
-            return this.Ok("Saved");
+            try
+            {
+                this.dbService.AddClientCardWithContext(clientCard, this.context);
+                return this.Ok("Saved");
+            }
+            catch (DatabaseException)
+            {
+                return this.StatusCode(409);
+            }
         }
 
         [HttpGet]
@@ -104,6 +103,13 @@ namespace DataCollection.Controllers
             }
 
             return this.File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "clients.xlsx");
+        }
+
+        [HttpGet]
+        public ActionResult GetContractCount()
+        {
+            var count = this.dbService.GetContractCountWithContext(this.context);
+            return this.Ok(count);
         }
     }
 }
