@@ -38,8 +38,8 @@ namespace DataCollectionServiceTest
             MasterPersonnelNumber = "123",
             PutDate = new DateTime(2018, 01, 01),
             PerformDate = new DateTime(2018, 03, 01),
-            Works = "sr\r\nsrrrr",
-            RepairEquipments = "resistor1 - 10\r\nresistor2 - 15"
+            Works = "sr;\r\nsrrrr;",
+            RepairEquipments = "resistor1 - 10 шт;\r\nresistor2 - 15 шт;"
         };
 
         [Test]

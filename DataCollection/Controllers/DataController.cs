@@ -83,11 +83,12 @@ namespace DataCollection.Controllers
         public IActionResult GetAll()
         {
            var clientCards = this.dbService.GetAllClientCardsWithContext(this.context);
-            var d = new List<ClientCardFromBody>();
-            foreach (var client in clientCards)
-            {
-                d.Add(ClientCardFromBody.ConvertToClientCardFromBody(client));
-            }
+            var d = ClientCardForExcel.ConvertToListClientCardForExcel(clientCards);
+            //var d = new List<ClientCardFromBody>();
+            //foreach (var client in clientCards)
+            //{
+            //    d.Add(ClientCardFromBody.ConvertToClientCardFromBody(client));
+            //}
 
             return this.Ok(d);
         }

@@ -1,4 +1,4 @@
-﻿var { Button, FormGroup, FormControl, HelpBlock, ControlLabel, Nav, NavItem } = ReactBootstrap;
+﻿var { Button, FormGroup, FormControl, HelpBlock, ControlLabel, Nav, NavItem, Table } = ReactBootstrap;
 
 var works = [];
 var equipments = [];
@@ -100,7 +100,22 @@ class HomePage extends React.Component
             loadVisible: false,
             databaseVisible: false,
             activeNav: "0",
-            contractCount: ""
+            contractCount: "",
+            deserializeFile: [{
+                contractId: "",
+                clientName: "",
+                clientAddress: "",
+                phoneNumber: "",
+                email: "",
+                equipment: "",
+                breakage: "",
+                masterName: "",
+                masterPersonnelNumber: "",
+                putDate: "",
+                performDate: "",
+                works: [],
+                repairEquipments: []
+            }]
         };
     }
     onAddClick = (e) => {
@@ -112,6 +127,30 @@ class HomePage extends React.Component
         }));
         this.onGetContractCount();
     }
+    onLoadClick = (e) => {
+        e.preventDefault();
+        this.setState(() => ({
+            addVisible: false,
+            loadVisible: true,
+            databaseVisible: false
+        }));
+    }
+    onDatabaseClick = (e) => {
+        e.preventDefault();
+        this.setState(() => ({
+            addVisible: false,
+            loadVisible: false,
+            databaseVisible: true
+        }));
+        this.onGetDatabase();
+    }
+    navItemSelect = (eventKey, e) => {
+        e.preventDefault();
+        this.setState({
+            activeNav: eventKey
+        });
+    }
+
     onGetContractCount = () => {
         fetch(apiGetContractCount)
             .then((res) => {
@@ -136,29 +175,30 @@ class HomePage extends React.Component
             });
     }
 
-    onLoadClick = (e) => {
-        e.preventDefault();
-        this.setState(() => ({
-            addVisible: false,
-            loadVisible: true,
-            databaseVisible: false
-        }));
-    }
-    onDatabaseClick = (e) => {
-        e.preventDefault();
-        this.setState(() => ({
-            addVisible: false,
-            loadVisible: false,
-            databaseVisible: true
-        }));
-    }
-    navItemSelect = (eventKey, e) => {
-        e.preventDefault();
-        this.setState({
-            activeNav: eventKey
-        });
-    }
+    onGetDatabase = () => {
+        fetch(apiGetAll)
+            .then((res) => {
+                    if (res.status === 200) {
+                        return res.json();
+                    }
+                    if (res.status === 400) {
+                        this.setState({
+                            error: "400"
+                        });
+                    }
+                    return null;
+            },
+            function () {
+                this.setState({
+                    error: "Что-то пошло не так. Попробуйте обновить страницу и повторить попытку"
 
+                });
+            }).then((data) => {
+                this.setState({
+                    deserializeFile: data
+                });
+            });
+    }
     render() {
         return (
             <div>
@@ -187,7 +227,7 @@ class HomePage extends React.Component
                 />
                 <DatabasePage
                     databaseVisible={this.state.databaseVisible}
-                    apiUrlGetAll={apiGetAll}
+                    deserializeFile={this.state.deserializeFile}
                     apiUrlGetExcel={apiGetExcel}
                 />
             </div>
@@ -516,6 +556,7 @@ class BtnGroup extends React.Component {
         this.state = {
             invisible: this.props.loadVisible,
             deserializeFile: {
+                contractId: "",
                 clientName: "",
                 clientAddress: "",
                 phoneNumber: "",
@@ -588,6 +629,10 @@ class BtnGroup extends React.Component {
                         <h3>Информация о клиенте</h3>
                         <table>
                             <tbody>
+                            <tr>
+                                <td id="tbl-lbl"><label>Номер заказа: </label></td>
+                                <td>{this.state.deserializeFile.contractId}</td>
+                            </tr>
                                 <tr>
                                     <td id="tbl-lbl"><label>ФИО Заказчика: </label></td>
                                     <td>{this.state.deserializeFile.clientName}</td>
@@ -685,46 +730,7 @@ class DatabasePage extends React.Component
     constructor(props) {
         super(props);
         this.state = {
-            deserializeFile: {
-                clientName: "",
-                clientAddress: "",
-                phoneNumber: "",
-                email: "",
-                equipment: "",
-                breakage: "",
-                masterName: "",
-                masterPersonnelNumber: "",
-                putDate: "",
-                performDate: "",
-                workList: [],
-                repairEquipments: []
-            }
         };
-    }
-
-    onGetDatabase = (e) => {
-        e.preventDefault();            
-        fetch(this.props.apiUrlGetAll)
-        .then((res) => {
-            if (res.status === 200) {
-                return res.json();
-            }
-            if (res.status === 400) {
-                this.setState({
-                    error: "400"
-                });
-            }
-            return null;
-        }, function () {
-            this.setState({
-                error: "Что-то пошло не так. Попробуйте обновить страницу и повторить попытку"
-
-            });
-        }).then((data) => {
-            this.setState({
-                deserializeFile: data
-            });
-        });
     }
 
     onGetExcel = (e) => {
@@ -753,12 +759,54 @@ class DatabasePage extends React.Component
         tempLink.href = fileUrl;
         tempLink.click();
     }
-
     render() {
             return (               
             <div className={`visible${this.props.databaseVisible ? "" : "_none"}`}>
-                    <Button onClick={this.onGetDatabase} style={{marginRight:"5px"}}>Загрузить всё из базы</Button>
-                    <Button onClick={this.onGetExcel}>Скачать базу в Excel</Button>
+                <Button onClick={this.onGetExcel}>Скачать базу в Excel</Button>
+                <br />
+                <br />
+                <Table striped bordered condensed hover>
+                    <thead>
+                    <tr>
+                        <th>Номер заказа</th>
+                        <th>Имя Клиента</th>
+                        <th>Адрес клиента</th>
+                        <th>Телефон</th>
+                        <th>Почта</th>
+                        <th>Оборудование</th>
+                        <th>Причина сдачи</th>
+                        <th>Дата сдачи</th>
+                        <th>Мастер</th>
+                        <th>Табельный номер</th>
+                        <th>Дата выполнения</th>
+                        <th>Выполненные работы</th>
+                        <th>Расходные материалы</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {
+                        this.props.deserializeFile.map( function(item) {
+                            return (
+                                <tr>
+                                    <td>{item.contractId}</td>
+                                    <td>{item.clientName}</td>
+                                    <td>{item.clientAddress}</td>
+                                    <td>{item.phoneNumber}</td>
+                                    <td>{item.email}</td>
+                                    <td>{item.equipment}</td>
+                                    <td>{item.breakage}</td>
+                                    <td style={{minWidth:"85px"}}>{item.putDate.slice(0, 10)}</td>
+                                    <td>{item.masterName}</td>
+                                    <td>{item.masterPersonnelNumber}</td>
+                                    <td style={{ minWidth: "85px" }}>{item.performDate.slice(0, 10)}</td>
+                                    <td style = {{wordWrap:"normal"}}>{item.works}</td>
+                                    <td style = {{ wordWrap: "normal" }}>{item.repairEquipments}</td>
+                                </tr>
+                            );
+                        })
+                        }
+                    </tbody>
+                </Table>
             </div>
         );
     }

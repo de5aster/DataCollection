@@ -48,9 +48,9 @@ namespace DataCollectionService.Services
             tbl.TableStyle = TableStyles.Dark9;
 
             // AutoFitColumns and Wraptext
-            worksheet.Cells[1, 1, clientCardsExcel.Count, 13].AutoFitColumns();
-            worksheet.Cells[2, 13, 2 + clientCardsExcel.Count, 12].Style.WrapText = true;
-            worksheet.Cells[2, 14, 2 + clientCardsExcel.Count, 13].Style.WrapText = true;
+            worksheet.Cells[1, 1, clientCardsExcel.Count, 14].AutoFitColumns();
+            worksheet.Cells[2, 13, 2 + clientCardsExcel.Count, 13].Style.WrapText = true;
+            worksheet.Cells[2, 14, 2 + clientCardsExcel.Count, 14].Style.WrapText = true;
             return package;
         }
     }

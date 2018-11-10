@@ -75,7 +75,7 @@ namespace DataCollectionService.Helpers
             var result = "";
             foreach (var equip in repairEquipments)
             {
-                result += equip.Name + " - " + equip.Count + Environment.NewLine;
+                result += equip.Name + " - " + equip.Count + " шт;" + Environment.NewLine;
             }
 
             return result.Trim();
@@ -86,7 +86,7 @@ namespace DataCollectionService.Helpers
             var worksString = "";
             foreach (var work in works)
             {
-                worksString += work.Name + Environment.NewLine;
+                worksString += work.Name + ";" + Environment.NewLine;
             }
 
             return worksString.Trim();
