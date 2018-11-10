@@ -211,7 +211,7 @@ class HomePage extends React.Component
                         Загрузить созданную карту
                     </NavItem>
                     <NavItem eventKey="3" onClick={this.onDatabaseClick}>
-                        Загрузить из базы
+                        База данных
                     </NavItem>
                 </Nav>
                 <BtnGroup

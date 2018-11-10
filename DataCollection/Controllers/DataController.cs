@@ -53,17 +53,17 @@ namespace DataCollection.Controllers
         [HttpPost]
         public IActionResult Save([FromBody] ClientCardFromBody clientCardFromBody)
         {
-            if (clientCardFromBody == null)
+            try
+            {
+                var clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
+                var xmlData = ClientCardSerializeService.SerializeDataToXml(clientCard, this.encode);
+                var bytes = this.encode.GetBytes(xmlData);
+                return this.File(bytes, "application/otcet-stream", "client.xml");
+            }
+            catch (EntitiesException)
             {
                 return this.StatusCode(209);
             }
-
-            const string fileType = "application/otcet-stream";
-            const string fileName = "client.xml";
-            var clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
-            var xmlData = ClientCardSerializeService.SerializeDataToXml(clientCard, this.encode);
-            var bytes = this.encode.GetBytes(xmlData);
-            return this.File(bytes, fileType, fileName);
         }
 
         [HttpPost]

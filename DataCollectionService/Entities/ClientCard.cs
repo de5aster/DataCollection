@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DataCollectionService.Exceptions;
 using DataCollectionService.Helpers;
 
@@ -44,7 +45,7 @@ namespace DataCollectionService.Entities
         {
             if (client == null)
             {
-                throw new EntitiesException("Input is not be null");
+                throw new EntitiesException("Input can not be null");
             }
 
             return new ClientCard
@@ -68,8 +69,14 @@ namespace DataCollectionService.Entities
 
         private static List<Work> ConvertToWorks(IEnumerable<string> works)
         {
+            var enumerable = works as string[] ?? works.ToArray();
+            if (enumerable.Length == 0)
+            {
+                throw new EntitiesException("Works can not be null");
+            }
+
             var workList = new List<Work>();
-            foreach (var work in works)
+            foreach (var work in enumerable)
             {
                 workList.Add(new Work(work));
             }
