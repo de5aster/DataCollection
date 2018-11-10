@@ -7,6 +7,7 @@
 }
 #content {
     width: 70%;
+    min-height: 887px;
     background-color: #FFFFFF;
     margin: auto;
     margin-top: 30px;
@@ -14,9 +15,12 @@
 }
 #data-label {
     min-width: 300px;
+    padding-top: 5px;
 }
 #tbl-lbl {
     min-width: 180px;
+    padding-right: 5px;
+    padding-top: 5px;
 }
 input[type=date] {
     min-width: 145px;
@@ -24,6 +28,7 @@ input[type=date] {
 .visible {
     display: block;
     margin-top: 30px;
+    padding-left: 30px;
 }
 .visible_none {
     display: none;
@@ -68,4 +73,8 @@ td #number {
 
 .visible-material-none {
     display: none;
+}
+
+td {
+    padding: 3px;
 }

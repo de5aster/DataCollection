@@ -1,8 +1,4 @@
-﻿var Button = ReactBootstrap.Button;
-var FormGroup = ReactBootstrap.FormGroup;
-var FormControl = ReactBootstrap.FormControl;
-var HelpBlock = ReactBootstrap.HelpBlock;
-var Button = ReactBootstrap.Button;
+﻿var { Button, FormGroup, FormControl, HelpBlock, ControlLabel, Nav, NavItem } = ReactBootstrap;
 
 var works = [];
 var equipments = [];
@@ -35,9 +31,15 @@ class MasterWork extends React.Component {
 
     render() {
         return (
-            <tr>
-                <td id="tbl-lbl">Выполненные работы: </td>
-                <td> <input onChange={this.onChange} onBlur={this.onChangeValue} id="data-label"/></td>
+            <tr style={{ paddingBottom: "5px" }}>
+                <td id="tbl-lbl" style={{ paddingRight: "5px", paddingTop: "5px" }}><ControlLabel>Выполненные работы:</ControlLabel> </td>
+                <td id="data-label" style={{ paddingTop: "5px" }}>
+                    <FormControl
+                        type="text"
+                        value={this.state.value}
+                        onChange={this.onChange}
+                        onBlur={this.onChangeValue}
+                    ></FormControl></td>
             </tr>
             );
     }
@@ -48,7 +50,7 @@ class RepairEquipment extends React.Component {
         super(props);
         this.state = {
             name: "",
-            count: 0
+            count: ""
         };
     }
     onChangeNameValue = (e) => {
@@ -69,8 +71,20 @@ class RepairEquipment extends React.Component {
     render() {
         return (
             <tr>
-                <td id="tbl-lbl"><input onChange={this.onChangeNameValue} onBlur={this.onChangeValue}/></td>
-                <td id="data-label" ><input onChange={this.onChangeCountValue} onBlur={this.onChangeValue}/></td>
+                <td id="tbl-lbl" style={{ paddingRight: "5px", paddingTop:"5px" }}>
+                    <FormControl
+                        type="text"
+                        value={this.state.name}
+                        onChange={this.onChangeNameValue}
+                        onBlur={this.onChangeValue}></FormControl>
+                </td>
+                <td id="data-label" style={{ paddingTop: "5px" }}  >
+                    <FormControl
+                        type="number"
+                        value={this.state.count}
+                        onChange={this.onChangeCountValue}
+                        onBlur={this.onChangeValue}></FormControl>
+                </td>
             </tr>
         );
     }
@@ -83,7 +97,8 @@ class HomePage extends React.Component
         this.state = {
             addVisible: false,
             loadVisible: false,
-            databaseVisible: false
+            databaseVisible: false,
+            activeNav: "0"
         };
     }
     onAddClick = (e) => {
@@ -110,14 +125,28 @@ class HomePage extends React.Component
             databaseVisible: true
         }));
     }
+    navItemSelect = (eventKey, e) => {
+        e.preventDefault();
+        this.setState({
+            activeNav: eventKey
+        });
+    }
 
     render() {
         return (
             <div>
                 <h1>Карта технических работ</h1>
-                <button className="top-button" onClick = {this.onAddClick}>Создать новую карту </button>
-                <button className="top-button" onClick={this.onLoadClick}>Загрузить созданную карту</button>
-                <button className="top-button" onClick={this.onDatabaseClick}>Загрузить из базы</button>
+                <Nav bsStyle="tabs" activeKey={this.state.activeNav} onSelect={this.navItemSelect}>
+                    <NavItem eventKey="1" onClick={this.onAddClick}>
+                        Создать новую карту
+                    </NavItem>
+                    <NavItem eventKey="2" onClick={this.onLoadClick}>
+                        Загрузить созданную карту
+                    </NavItem>
+                    <NavItem eventKey="3" onClick={this.onDatabaseClick}>
+                        Загрузить из базы
+                    </NavItem>
+                </Nav>
                 <BtnGroup
                     apiUrlLoad={apiLoad}
                     addVisible={this.state.addVisible}
@@ -322,39 +351,65 @@ class DataCollection extends React.Component {
             equipmentList.push(<RepairEquipment key={i} number={i} updateRepairEquipment={this.updateRepairEquipment}/>);
         }
         return (
-            <div className={`visible${this.props.addVisible ? "" : "_none"}`}>
+            <div className={`visible${this.props.addVisible ? "" : "_none"}`} style={{ paddingLeft: "30px" }}>
                 <div>
-                    <br />
-                    <h2>Информация о клиенте</h2>
+                    <h3>Информация о клиенте</h3>
                     <table>
                         <tbody>
                             <tr>
-                                <td id="tbl-lbl"><label>ФИО Заказчика: </label></td>
-                                <td><input id="data-label" onChange={this.onChangeClientName}></input></td>
+                                <td id="tbl-lbl"><ControlLabel>ФИО Заказчика: </ControlLabel></td>
+                                <td id="data-label"><FormControl id="data-label"
+                                    type="text"
+                                    value={this.state.ClientName}
+                                    placeholder = "Введите значение"
+                                    onChange={this.onChangeClientName}></FormControl></td>
                             </tr>
                             <tr>
-                                <td> <label>Адрес проживания: </label></td>
-                                <td> <input id="data-label" onChange={this.onChangeClientAdress}></input></td>
+                                <td id="tbl-lbl"> <ControlLabel>Адрес проживания: </ControlLabel></td>
+                                <td id="data-label"> <FormControl id="data-label"
+                                    type = "text"
+                                    value={this.state.ClientAddress}
+                                    placeholder="Введите значение"
+                                    onChange={this.onChangeClientAdress}></FormControl></td>
                             </tr>
                             <tr>
-                                <td><label>Контактный телефон: </label></td>
-                                <td><input id="data-label" onChange={this.onChangePhoneNumber}></input></td>
+                                <td id="tbl-lbl"><ControlLabel>Контактный телефон: </ControlLabel></td>
+                                <td id="data-label"><FormControl id="data-label"
+                                    type="tel"
+                                    value={this.state.PhoneNumber}
+                                    placeholder="Введите значение"
+                                    onChange={this.onChangePhoneNumber}></FormControl></td>
                             </tr>
                             <tr>
-                                <td><label>Почта: </label></td>
-                                <td><input id="data-label" id="data-label" onChange={this.onChangeEmail}></input></td>
+                                <td id="tbl-lbl"><ControlLabel>Почта: </ControlLabel></td>
+                                <td id="data-label"><FormControl id="data-label"
+                                    type="email"
+                                    value = {this.state.Email}
+                                    placeholder="Введите значение"
+                                    onChange={this.onChangeEmail}></FormControl></td>
                             </tr>
                             <tr>
-                                <td> <label>Оборудование: </label></td>
-                                <td><input id="data-label" onChange={this.onChangeEquipment}></input></td>
+                                <td id="tbl-lbl"> <ControlLabel>Оборудование: </ControlLabel></td>
+                                <td id="data-label"><FormControl id="data-label"
+                                    type="text"
+                                    value={this.state.Equipment}
+                                    placeholder="Введите значение"
+                                    onChange={this.onChangeEquipment}></FormControl></td>
                             </tr>
                             <tr>
-                                <td><label>Причина сдачи: </label></td>
-                                <td><input id="data-label" onChange={this.onChangeBreakage}></input></td>
+                                <td id="tbl-lbl"><ControlLabel>Причина сдачи: </ControlLabel></td>
+                                <td id="data-label"><FormControl id="data-label"
+                                    type="text"
+                                    value={this.state.Breakage}
+                                    placeholder="Введите значение"
+                                    onChange={this.onChangeBreakage}></FormControl></td>
                             </tr>
                             <tr>
-                                <td><label>Дата сдачи оборудования: </label></td>
-                                <td><input type="date" onChange={this.onChangePutDate}></input></td>
+                                <td id="tbl-lbl"><ControlLabel>Дата сдачи оборудования: </ControlLabel></td>
+                                <td id="data-label"><FormControl
+                                    type="date"
+                                    value={this.state.PutDate}
+                                    onChange={this.onChangePutDate}></FormControl></td>
                             </tr>
                         </tbody>
                     </table>
@@ -362,26 +417,37 @@ class DataCollection extends React.Component {
                     <table>
                         <tbody>
                             <tr>
-                                <td id="tbl-lbl"><label> ФИО Мастера: </label></td>
-                                <td><input id="data-label" onChange={this.onChangeMasterName}></input></td>
+                                <td id="tbl-lbl"><ControlLabel> ФИО Мастера: </ControlLabel></td>
+                                <td id="data-label"><FormControl id="data-label"
+                                    type="text"
+                                    value={this.state.MasterName}
+                                    placeholder="Введите значение"
+                                    onChange={this.onChangeMasterName}></FormControl></td>
                             </tr>
                             <tr>
-                                <td> <label>Табельный номер: </label></td>
-                                <td><input id="data-label" onChange={this.onChangeMasterPersonnelNumber}></input></td>
+                                <td id="tbl-lbl"><ControlLabel>Табельный номер: </ControlLabel></td>
+                                <td id="data-label"><FormControl id="data-label"
+                                    type="text"
+                                    value={this.state.MasterPersonnelNumber}
+                                    placeholder="Введите значение"
+                                    onChange={this.onChangeMasterPersonnelNumber}></FormControl></td>
                             </tr>
                             <tr>
-                                <td><label>Дата выполения: </label></td>
-                                <td><input type="date" onChange={this.onChangePerformDate}></input></td>
+                                <td id="tbl-lbl"><ControlLabel>Дата выполения: </ControlLabel></td>
+                                <td id="data-label"><FormControl
+                                    type="date"
+                                    value={this.state.PerformDate}
+                                    onChange={this.onChangePerformDate}></FormControl></td>
                             </tr>
                         </tbody>
                     </table>
                     <h3>Выполненные работы</h3>
-                    <table style={{ marginBottom: "5px" }}>
+                    <table>
                         <tbody>
                             {workList}
                         </tbody>
                     </table>
-                    <button onClick={this.onAddMasterWork}>{this.state.workButtonText}</button>
+                   <Button onClick={this.onAddMasterWork}>{this.state.workButtonText}</Button>
                     <h3>Расходные материалы</h3>
                     <table className={`visible-material${this.state.materialVisible ? "" : "-none"}`}>
                         <thead>
@@ -394,11 +460,11 @@ class DataCollection extends React.Component {
                             {equipmentList}
                         </tbody>
                     </table>
-                    <button onClick={this.onAddRepairEquipments}>{this.state.materialButtonText}</button>
+                    <Button onClick={this.onAddRepairEquipments}>{this.state.materialButtonText}</Button>
                     <br />
                     <br />
-                    <button style={{ marginRight: "5px" }} onClick={this.onDatabaseSaveClick}>Сохранить</button>
-                    <button onClick={this.onSaveClick}>Сохранить в файл</button>
+                    <Button style={{ marginRight: "5px" }} onClick={this.onDatabaseSaveClick}>Сохранить</Button>
+                    <Button onClick={this.onSaveClick}>Сохранить в файл</Button>
                     
                 </div>
             </div>
@@ -479,7 +545,7 @@ class BtnGroup extends React.Component {
                             accept=".xml"
                             onChange={this.onChangeFile} />
                     </FormGroup>
-                    <Button bsStyle="primary" type="submit" disabled={!this.state.file}>Загрузить</Button>
+                    <Button type="submit" disabled={!this.state.file}>Загрузить</Button>
                     <div className={`visible${this.state.invisible ? "" : "_none"}`}>
                         <h3>Информация о клиенте</h3>
                         <table>
@@ -535,13 +601,13 @@ class BtnGroup extends React.Component {
                         <table>
                             <tbody>
                         {
-                        this.state.deserializeFile.works.map((item,index) => {
-                            return (
-                                <tr>
-                                    <td>{index +1}. </td>
-                                    <td>{item.name}</td>
-                                </tr>
-                            )})
+                            this.state.deserializeFile.works.map((item,index) => {
+                                return (
+                                    <tr>
+                                        <td>{index +1}. </td>
+                                        <td>{item.name}</td>
+                                    </tr>
+                                )})
                         }
                             </tbody>
                         </table>
@@ -556,16 +622,16 @@ class BtnGroup extends React.Component {
                             </thead>
                             <tbody>
                             {
-                            this.state.deserializeFile.repairEquipments.map((item, index) => {
-                                return (
+                                this.state.deserializeFile.repairEquipments.map((item, index) => {
+                                    return (
                                     
-                                <tr id="item">
-                                    <td id="number">{index + 1}. </td>
-                                    <td style={{marginRight:"10px" }}>{item.name}</td>
-                                    <td>{item.count} шт.</td>
-                                </tr>
-                                );
-                            })}
+                                        <tr id="item">
+                                            <td id="number">{index + 1}. </td>
+                                            <td style={{marginRight:"10px" }}>{item.name}</td>
+                                            <td>{item.count} шт.</td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
@@ -644,17 +710,17 @@ class DatabasePage extends React.Component
         var data = new Blob([blob], {
             type: "application/otcet-stream"
         }),
-            fileURL = window.URL.createObjectURL(data),
+            fileUrl = window.URL.createObjectURL(data),
             tempLink = document.createElement("a");
-        tempLink.href = fileURL;
+        tempLink.href = fileUrl;
         tempLink.click();
     }
 
     render() {
             return (               
             <div className={`visible${this.props.databaseVisible ? "" : "_none"}`}>
-                    <button bsStyle="primary" onClick={this.onGetDatabase}>Загрузить всё из базы</button>
-                    <button bsStyle="primary" onClick={this.onGetExcel}>Excel</button>
+                    <Button onClick={this.onGetDatabase} style={{marginRight:"5px"}}>Загрузить всё из базы</Button>
+                    <Button onClick={this.onGetExcel}>Скачать базу в Excel</Button>
             </div>
         );
     }
