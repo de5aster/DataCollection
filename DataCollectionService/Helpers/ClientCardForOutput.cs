@@ -4,9 +4,9 @@ using DataCollectionService.Entities;
 
 namespace DataCollectionService.Helpers
 {
-    public class ClientCardForExcel
+    public class ClientCardForOutput
     {
-        public ClientCardForExcel()
+        public ClientCardForOutput()
         {
         }
 
@@ -38,20 +38,20 @@ namespace DataCollectionService.Helpers
 
         public string RepairEquipments { get; set; }
 
-        public static List<ClientCardForExcel> ConvertToListClientCardForExcel(IList<ClientCard> clientCards)
+        public static List<ClientCardForOutput> ConvertToListClientCardForOutput(IList<ClientCard> clientCards)
         {
-            var result = new List<ClientCardForExcel>();
+            var result = new List<ClientCardForOutput>();
             foreach (var clientCard in clientCards)
             {
-                result.Add(ConvertToClientCardForExcel(clientCard));
+                result.Add(ConvertToClientCardForOutput(clientCard));
             }
 
             return result;
         }
 
-        public static ClientCardForExcel ConvertToClientCardForExcel(ClientCard clientCard)
+        public static ClientCardForOutput ConvertToClientCardForOutput(ClientCard clientCard)
         {
-            return new ClientCardForExcel()
+            return new ClientCardForOutput()
             {
                 CardId = clientCard.Id,
                 ContractId = clientCard.ContractId,

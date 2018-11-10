@@ -156,7 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientCardDatabaseServiceTest.cs" />
-    <Compile Include="ClientCardForExcelTest.cs" />
+    <Compile Include="ClientCardForOutputTest.cs" />
     <Compile Include="ClientCardSerializeTest.cs" />
     <Compile Include="ClientCardTests.cs" />
     <Compile Include="ClientClassFromBodyTest.cs" />

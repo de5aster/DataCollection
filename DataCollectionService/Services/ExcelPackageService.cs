@@ -12,7 +12,7 @@ namespace DataCollectionService.Services
         public static ExcelPackage CreateExcelPackage(IList<ClientCard> clientCards)
         {
             var package = new ExcelPackage();
-            var clientCardsExcel = ClientCardForExcel.ConvertToListClientCardForExcel(clientCards);
+            var cardsForOutput = ClientCardForOutput.ConvertToListClientCardForOutput(clientCards);
             package.Workbook.Properties.Title = "Clients Report";
             package.Workbook.Properties.Author = "System";
             package.Workbook.Properties.Subject = "ClientCards Report";
@@ -38,19 +38,19 @@ namespace DataCollectionService.Services
             const string dataCellStyleName = "TableNumber";
             var numStyle = package.Workbook.Styles.CreateNamedStyle(dataCellStyleName);
             numStyle.Style.Numberformat.Format = numberformat;
-            worksheet.Cells["A2"].LoadFromCollection(clientCardsExcel);
-            worksheet.Cells[2, 10, 2 + clientCardsExcel.Count, 11].Style.Numberformat.Format = "dd-mm-yyyy";
-            worksheet.Cells[2, 11, 2 + clientCardsExcel.Count, 12].Style.Numberformat.Format = "dd-mm-yyyy";
+            worksheet.Cells["A2"].LoadFromCollection(cardsForOutput);
+            worksheet.Cells[2, 10, 2 + cardsForOutput.Count, 11].Style.Numberformat.Format = "dd-mm-yyyy";
+            worksheet.Cells[2, 11, 2 + cardsForOutput.Count, 12].Style.Numberformat.Format = "dd-mm-yyyy";
 
             // Add to table style
-            var tbl = worksheet.Tables.Add(new ExcelAddressBase(fromRow: 1, fromCol: 1, toRow: clientCardsExcel.Count + 1, toColumn: 14), "Data");
+            var tbl = worksheet.Tables.Add(new ExcelAddressBase(fromRow: 1, fromCol: 1, toRow: cardsForOutput.Count + 1, toColumn: 14), "Data");
             tbl.ShowHeader = true;
             tbl.TableStyle = TableStyles.Dark9;
 
             // AutoFitColumns and Wraptext
-            worksheet.Cells[1, 1, clientCardsExcel.Count, 14].AutoFitColumns();
-            worksheet.Cells[2, 13, 2 + clientCardsExcel.Count, 13].Style.WrapText = true;
-            worksheet.Cells[2, 14, 2 + clientCardsExcel.Count, 14].Style.WrapText = true;
+            worksheet.Cells[1, 1, cardsForOutput.Count, 14].AutoFitColumns();
+            worksheet.Cells[2, 13, 2 + cardsForOutput.Count, 13].Style.WrapText = true;
+            worksheet.Cells[2, 14, 2 + cardsForOutput.Count, 14].Style.WrapText = true;
             return package;
         }
     }

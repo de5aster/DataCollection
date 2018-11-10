@@ -94,7 +94,7 @@ namespace DataCollection.Controllers
         public IActionResult GetAll()
         {
             var clientCards = this.dbService.GetAllClientCardsWithContext(this.context);
-            var d = ClientCardForExcel.ConvertToListClientCardForExcel(clientCards);
+            var d = ClientCardForOutput.ConvertToListClientCardForOutput(clientCards);
             return this.Ok(d);
         }
 

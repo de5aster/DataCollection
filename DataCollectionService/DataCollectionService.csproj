@@ -142,7 +142,7 @@
     <Compile Include="Entities\Work.cs" />
     <Compile Include="Exceptions\DatabaseException.cs" />
     <Compile Include="Exceptions\EntitiesException.cs" />
-    <Compile Include="Helpers\ClientCardForExcel.cs" />
+    <Compile Include="Helpers\ClientCardForOutput.cs" />
     <Compile Include="Helpers\ClientCardFromBody.cs" />
     <Compile Include="Services\ClientCardDatabaseService.cs" />
     <Compile Include="Services\ClientCardSerializeService.cs" />

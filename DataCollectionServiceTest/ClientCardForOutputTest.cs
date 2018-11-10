@@ -8,9 +8,9 @@ using NUnit.Framework;
 namespace DataCollectionServiceTest
 {
     [TestFixture]
-    public class ClientCardForExcelTest
+    public class ClientCardForOutputTest
     {
-        private ClientCard client = new ClientCard
+        private readonly ClientCard client = new ClientCard
         {
             ClientName = "Антон",
             ClientAddress = "ЕКБ",
@@ -26,7 +26,7 @@ namespace DataCollectionServiceTest
             RepairEquipments = new List<RepairEquipment> { new RepairEquipment("resistor1", 10), new RepairEquipment("resistor2", 15) }
         };
 
-        private ClientCardForExcel clientForExcel = new ClientCardForExcel
+        private readonly ClientCardForOutput clientForOutput = new ClientCardForOutput
         {
             ClientName = "Антон",
             ClientAddress = "ЕКБ",
@@ -43,26 +43,26 @@ namespace DataCollectionServiceTest
         };
 
         [Test]
-        public void CanConvertToClientCardForExcel()
+        public void CanConvertToClientCardForOutput()
         {
-            var result = ClientCardForExcel.ConvertToClientCardForExcel(this.client);
-            result.Should().BeEquivalentTo(this.clientForExcel);
+            var result = ClientCardForOutput.ConvertToClientCardForOutput(this.client);
+            result.Should().BeEquivalentTo(this.clientForOutput);
         }
 
         [Test]
-        public void CanConvertToListClientCardForExcel()
+        public void CanConvertToListClientCardForOutput()
         {
             var clientCardList = new List<ClientCard>
             {
                 this.client,
                 this.client
             };
-            var listForExcel = new List<ClientCardForExcel>
+            var listForExcel = new List<ClientCardForOutput>
             {
-                this.clientForExcel,
-                this.clientForExcel
+                this.clientForOutput,
+                this.clientForOutput
             };
-            var result = ClientCardForExcel.ConvertToListClientCardForExcel(clientCardList);
+            var result = ClientCardForOutput.ConvertToListClientCardForOutput(clientCardList);
             result.Should().BeEquivalentTo(listForExcel);
         }
     }
