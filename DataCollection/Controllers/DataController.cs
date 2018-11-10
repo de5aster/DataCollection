@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,7 +35,6 @@ namespace DataCollection.Controllers
         [HttpPost]
         public async Task<IActionResult> Load(IFormFile file)
         {
-            var filePath = Path.GetTempFileName();
             var str = string.Empty;
             if (file.Length > 0)
             {
@@ -53,21 +53,32 @@ namespace DataCollection.Controllers
         [HttpPost]
         public IActionResult Save([FromBody] ClientCardFromBody clientCardFromBody)
         {
+            if (clientCardFromBody == null)
+            {
+                return this.StatusCode(209);
+            }
+
             const string fileType = "application/otcet-stream";
             const string fileName = "client.xml";
             var clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
             var xmlData = ClientCardSerializeService.SerializeDataToXml(clientCard, this.encode);
-            //var ms = new MemoryStream();
             var bytes = this.encode.GetBytes(xmlData);
-            //ms.Write(bytes, 0, bytes.Length);
-            //ms.Position = 0;
             return this.File(bytes, fileType, fileName);
         }
 
         [HttpPost]
         public IActionResult SaveDatabase([FromBody] ClientCardFromBody clientCardFromBody)
         {
-            var clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
+            ClientCard clientCard;
+            try
+            {
+                clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
+            }
+            catch (EntitiesException)
+            {
+                return this.StatusCode(209);
+            }
+
             try
             {
                 this.dbService.AddClientCardWithContext(clientCard, this.context);
@@ -82,14 +93,8 @@ namespace DataCollection.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-           var clientCards = this.dbService.GetAllClientCardsWithContext(this.context);
+            var clientCards = this.dbService.GetAllClientCardsWithContext(this.context);
             var d = ClientCardForExcel.ConvertToListClientCardForExcel(clientCards);
-            //var d = new List<ClientCardFromBody>();
-            //foreach (var client in clientCards)
-            //{
-            //    d.Add(ClientCardFromBody.ConvertToClientCardFromBody(client));
-            //}
-
             return this.Ok(d);
         }
 

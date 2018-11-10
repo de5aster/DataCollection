@@ -359,15 +359,17 @@ class DataCollection extends React.Component {
             if (xhr.status === 200) {
                 alert(xhr.responseText);
             }
+            if (xhr.status === 209) {
+                alert("Форма не заполнена");
+            }
             if (xhr.status === 409) {
-                alert("ContractId already exists");
+                alert("Карточка с таким номером заказа уже существует. Обновите страницу.");
             }
         }
         xhr.send(data); 
     }
 
     onSaveClick = () => {
-        
         var data = JSON.stringify({
             "ContractId": this.props.contractCount,
             "ClientName": this.state.ClientName,
@@ -386,9 +388,14 @@ class DataCollection extends React.Component {
         var xhr = new XMLHttpRequest();
         xhr.open("post", this.props.apiUrlSave, true);
         xhr.setRequestHeader("Content-type", "application/json");
-        xhr.onload = function (e) {            
-            var blob = xhr.response;
-            this.saveOrOpenBlob(blob);
+        xhr.onload = function (e) { 
+            if (xhr.status === 200) {
+                var blob = xhr.response;
+                this.saveOrOpenBlob(blob);
+            }
+            if (xhr.status === 209) {
+                alert("Форма не заполнена");
+            }
         }.bind(this);
         xhr.send(data);        
     }
@@ -415,6 +422,32 @@ class DataCollection extends React.Component {
             materialButtonText: "Добавить ещё"
         });
     }
+
+    onClearClick = (e) => {
+        e.preventDefault();
+        this.setState({
+            numEquipment: 0,
+            numWorkList: 0,
+            ContractId: 0,
+            ClientName: "",
+            ClientAddress: "",
+            PhoneNumber: "",
+            Email: "",
+            Equipment: "",
+            Breakage: "",
+            MasterName: "",
+            MasterPersonnelNumber: "",
+            PutDate: "",
+            PerformDate: "",
+            WorkList: [],
+            RepairEquipments: [],
+            inputList: [],
+            materialVisible: false,
+            workButtonText: "Добавить работу",
+            materialButtonText: "Добавить материал"
+        });
+    }
+
     render() {
         const workList = [];
         for (var i = 0; i < this.state.numWorkList; i += 1) {
@@ -543,6 +576,7 @@ class DataCollection extends React.Component {
                     <br />
                     <Button style={{ marginRight: "5px" }} onClick={this.onDatabaseSaveClick}>Сохранить</Button>
                     <Button onClick={this.onSaveClick}>Сохранить в файл</Button>
+                    <Button onClick={this.onClearClick}>Очистить форму</Button>
                     
                 </div>
             </div>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DataCollectionService.Entities;
+using DataCollectionService.Exceptions;
 using DataCollectionService.Helpers;
 using FluentAssertions;
 using NUnit.Framework;
@@ -43,14 +44,24 @@ namespace DataCollectionServiceTest
         };
 
         [Test]
-        public void ConvertToClientCardTest()
+        public void CanConvertToClientCard()
         {
             var clientCard = ClientCard.ConvertToClientCard(this.clientCardFromBody);
-            this.SetDefaultGuid(this.client, clientCard);
+            SetDefaultGuid(this.client, clientCard);
             clientCard.Should().BeEquivalentTo(this.client);
         }
 
-        private void SetDefaultGuid(ClientCard client, ClientCard clientResult)
+        [Test]
+        public void CanNotConvertNullToCardClient()
+        {
+            ClientCardFromBody clientFromBody = null;
+
+            Action act = () => ClientCard.ConvertToClientCard(clientFromBody);
+            act.Should().Throw<EntitiesException>()
+                .WithMessage("Input is not be null");
+        }
+
+        private static void SetDefaultGuid(ClientCard client, ClientCard clientResult)
         {
             var defaultGuidId = Guid.Empty;
             client.Id = defaultGuidId;

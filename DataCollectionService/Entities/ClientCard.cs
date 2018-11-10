@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DataCollectionService.Exceptions;
 using DataCollectionService.Helpers;
 
 namespace DataCollectionService.Entities
@@ -41,6 +42,11 @@ namespace DataCollectionService.Entities
 
         public static ClientCard ConvertToClientCard(ClientCardFromBody client)
         {
+            if (client == null)
+            {
+                throw new EntitiesException("Input is not be null");
+            }
+
             return new ClientCard
             {
                 Id = Guid.NewGuid(),
