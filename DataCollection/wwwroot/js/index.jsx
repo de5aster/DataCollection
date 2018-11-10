@@ -1,4 +1,4 @@
-﻿var { Button, FormGroup, FormControl, HelpBlock, ControlLabel, Nav, NavItem, Table } = ReactBootstrap;
+﻿var { Button, FormGroup, FormControl, HelpBlock, ControlLabel, Nav, NavItem, Table, Tooltip, OverlayTrigger  } = ReactBootstrap;
 
 var works = [];
 var equipments = [];
@@ -321,19 +321,15 @@ class DataCollection extends React.Component {
                 WorkList: works
             });
         }
-        console.log(typeof (this.state.WorkList));
     }
 
     updateRepairEquipment = (name, count, number) => {
         if (name != null && count != null)
         {
-            console.log(number);
             equipments[number] = [name, count];
-            console.log(equipments);
             this.setState({
                 RepairEquipments : equipments
             });
-            console.log(typeof (this.state.RepairEquipments));
         }
     }
     onDatabaseSaveClick = () => {
@@ -360,7 +356,7 @@ class DataCollection extends React.Component {
                 alert(xhr.responseText);
             }
             if (xhr.status === 209) {
-                alert("Форма не заполнена");
+                alert("Форма заполнена некорректно");
             }
             if (xhr.status === 409) {
                 alert("Карточка с таким номером заказа уже существует. Обновите страницу.");
@@ -388,13 +384,13 @@ class DataCollection extends React.Component {
         var xhr = new XMLHttpRequest();
         xhr.open("post", this.props.apiUrlSave, true);
         xhr.setRequestHeader("Content-type", "application/json");
-        xhr.onload = function (e) { 
+        xhr.onload = function () { 
             if (xhr.status === 200) {
                 var blob = xhr.response;
                 this.saveOrOpenBlob(blob);
             }
             if (xhr.status === 209) {
-                alert("Форма не заполнена");
+                alert("Форма заполнена некорректно");
             }
         }.bind(this);
         xhr.send(data);        
@@ -457,6 +453,11 @@ class DataCollection extends React.Component {
         for (var i = 0; i < this.state.numEquipment; i += 1) {
             equipmentList.push(<RepairEquipment key={i} number={i} updateRepairEquipment={this.updateRepairEquipment}/>);
         }
+        const tooltip = (
+            <Tooltip id="tooltip">
+                <strong>Формируется автоматически</strong>
+            </Tooltip>
+        );
         return (
             <div className={`visible${this.props.addVisible ? "" : "_none"}`} style={{ paddingLeft: "30px" }}>
                 <div>
@@ -465,7 +466,10 @@ class DataCollection extends React.Component {
                         <tbody>
                         <tr>
                             <td id="tbl-lbl"><ControlLabel>Номер заказа: </ControlLabel></td>
-                            <td id="data-label"><label id="data-label">{this.props.contractCount}</label></td>
+                            <td style={{ maxWidth: "25px" }}>
+                                <OverlayTrigger placement="right" overlay={tooltip}>
+                                    <label style = {{paddingRight:"5px"}}>{this.props.contractCount}</label>
+                                </OverlayTrigger></td>
                         </tr>
                             <tr>
                                 <td id="tbl-lbl"><ControlLabel>ФИО Заказчика: </ControlLabel></td>
