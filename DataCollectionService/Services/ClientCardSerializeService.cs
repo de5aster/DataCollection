@@ -2,6 +2,8 @@
 using System.Text;
 using System.Xml.Serialization;
 using DataCollectionService.Entities;
+using DataCollectionService.Exceptions;
+using System;
 
 namespace DataCollectionService.Services
 {
@@ -26,12 +28,22 @@ namespace DataCollectionService.Services
                 return null;
             }
 
+            ClientCard deserializeClientCard;
             using (var ms = new MemoryStream())
             {
                 var bytes = encode.GetBytes(data);
                 ms.Write(bytes, 0, bytes.Length);
                 ms.Position = 0;
-                return (ClientCard)Serializer.Deserialize(ms);
+                try
+                {
+                    deserializeClientCard = (ClientCard)Serializer.Deserialize(ms);
+                }
+                catch (Exception)
+                {
+                    throw new SerializeServiceException("Invalid xml file");
+                }
+
+                return deserializeClientCard;
             }
         }
 

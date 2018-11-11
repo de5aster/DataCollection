@@ -669,12 +669,13 @@ class BtnGroup extends React.Component {
             if (res.status === 200) {
                 return res.json();
             }
-            if (res.status === 400) {
-                this.setState({
-                    error: "400"
-                });
+            if (res.status === 411) {
+                alert("Пустой файл. Выберите корректный файл");
             }
-            return null;
+            if (res.status === 409)
+            {
+                alert("Некорректный файл. Выберите корректный файл");
+            }
         }, function () {
             this.setState({
                 error: "Что-то пошло не так. Попробуйте обновить страницу и повторить попытку"

@@ -6,6 +6,7 @@ using DataCollectionService.Helpers;
 using DataCollectionService.Services;
 using FluentAssertions;
 using NUnit.Framework;
+using DataCollectionService.Exceptions;
 
 namespace DataCollectionServiceTest
 {
@@ -55,6 +56,19 @@ namespace DataCollectionServiceTest
 
             var dataFromXml = ClientCardSerializeService.DeserializeDataFromXml(stringFile, encode);
             dataFromXml.Should().BeEquivalentTo(this.clientCard);
+        }
+
+        [Test]
+        public void CanNotDeserializeFile()
+        {
+            var encode = Encoding.UTF8;
+            var filePath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestHelpers\\Files\\exceptionTestFile.xml");
+            var file = File.ReadAllLines(filePath, encode);
+            string stringFile = ClientCardSerializeService.ConvertToString(file);
+
+            Action act = () => ClientCardSerializeService.DeserializeDataFromXml(stringFile, encode);
+            act.Should().Throw<SerializeServiceException>()
+                .WithMessage("Invalid xml file");
         }
 
         [Test]

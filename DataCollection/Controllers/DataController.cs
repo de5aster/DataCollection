@@ -36,18 +36,28 @@ namespace DataCollection.Controllers
         public async Task<IActionResult> Load(IFormFile file)
         {
             var str = string.Empty;
-            if (file.Length > 0)
+            ClientCard deserializeClientCard;
+            if (file.Length == 0)
             {
-                using (var stream = new MemoryStream())
-                {
-                    await file.CopyToAsync(stream);
-                    str = this.encode.GetString(stream.GetBuffer());
-                }
-
-               return this.Ok(ClientCardSerializeService.DeserializeDataFromXml(str, this.encode));
+                return this.StatusCode(411);
             }
 
-            return this.BadRequest("Don't deserialize file");
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);
+                str = this.encode.GetString(stream.GetBuffer());
+            }
+
+            try
+            {
+                deserializeClientCard = ClientCardSerializeService.DeserializeDataFromXml(str, this.encode);
+            }
+            catch (SerializeServiceException)
+            {
+                return this.StatusCode(409);
+            }
+
+            return this.Ok(deserializeClientCard);
         }
 
         [HttpPost]
