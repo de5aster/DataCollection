@@ -33,7 +33,7 @@ class MasterWork extends React.Component {
     render() {
         return (
             <tr style={{ paddingBottom: "5px" }}>
-                <td id="tbl-lbl" style={{ paddingRight: "5px", paddingTop: "5px" }}><ControlLabel>Выполненные работы:</ControlLabel> </td>
+                <td id="tbl-lbl" style={{ paddingRight: "5px", paddingTop: "5px" }}><ControlLabel>Выполненные работы* :</ControlLabel> </td>
                 <td id="data-label" style={{ paddingTop: "5px" }}>
                     <FormControl
                         type="text"
@@ -411,6 +411,23 @@ class DataCollection extends React.Component {
         });
     }
 
+    onDeleteMasterWork = () => {
+        if (this.state.numWorkList > 0)
+        {
+            var index = this.state.numWorkList - 1;
+            var works = this.state.WorkList; 
+            works.splice(index, 1);
+        }
+        if (this.state.numWorkList == 1)
+        {
+            var index = 0;         
+            var works = [];
+        }
+        this.setState({
+            numWorkList: index,
+            WorkList: works
+        })
+    }
     onAddRepairEquipments = () => {
         this.setState({
             numEquipment: this.state.numEquipment + 1,
@@ -419,6 +436,24 @@ class DataCollection extends React.Component {
         });
     }
 
+    onDeleteRepairEquipments = () => {
+        if (this.state.numEquipment > 0) {
+            var index = this.state.numEquipment - 1;
+            var equips = this.state.RepairEquipments;
+            var visible = true;
+            equips.splice(index, 1);
+        }
+        if (this.state.numEquipment == 1) {
+            var index = 0;
+            var equips = [];
+            var visible = false;
+        }
+        this.setState({
+            numEquipment: index,
+            RepairEquipments: equips,
+            materialVisible: visible
+        })
+    }
     onClearClick = (e) => {
         e.preventDefault();
         this.setState({
@@ -462,6 +497,8 @@ class DataCollection extends React.Component {
             <div className={`visible${this.props.addVisible ? "" : "_none"}`} style={{ paddingLeft: "30px" }}>
                 <div>
                     <h3>Информация о клиенте</h3>
+                    <br />
+                    <p> * отмечены обязательные поля</p>
                     <table>
                         <tbody>
                         <tr>
@@ -472,7 +509,7 @@ class DataCollection extends React.Component {
                                 </OverlayTrigger></td>
                         </tr>
                             <tr>
-                                <td id="tbl-lbl"><ControlLabel>ФИО Заказчика: </ControlLabel></td>
+                                <td id="tbl-lbl"><ControlLabel>ФИО заказчика* : </ControlLabel></td>
                                 <td id="data-label"><FormControl id="data-label"
                                     type="text"
                                     value={this.state.ClientName}
@@ -480,7 +517,7 @@ class DataCollection extends React.Component {
                                     onChange={this.onChangeClientName}></FormControl></td>
                             </tr>
                             <tr>
-                                <td id="tbl-lbl"> <ControlLabel>Адрес проживания: </ControlLabel></td>
+                                <td id="tbl-lbl"> <ControlLabel>Адрес проживания* : </ControlLabel></td>
                                 <td id="data-label"> <FormControl id="data-label"
                                     type = "text"
                                     value={this.state.ClientAddress}
@@ -488,7 +525,7 @@ class DataCollection extends React.Component {
                                     onChange={this.onChangeClientAdress}></FormControl></td>
                             </tr>
                             <tr>
-                                <td id="tbl-lbl"><ControlLabel>Контактный телефон: </ControlLabel></td>
+                                <td id="tbl-lbl"><ControlLabel>Контактный телефон* : </ControlLabel></td>
                                 <td id="data-label"><FormControl id="data-label"
                                     type="tel"
                                     value={this.state.PhoneNumber}
@@ -504,7 +541,7 @@ class DataCollection extends React.Component {
                                     onChange={this.onChangeEmail}></FormControl></td>
                             </tr>
                             <tr>
-                                <td id="tbl-lbl"> <ControlLabel>Оборудование: </ControlLabel></td>
+                                <td id="tbl-lbl"> <ControlLabel>Оборудование* : </ControlLabel></td>
                                 <td id="data-label"><FormControl id="data-label"
                                     type="text"
                                     value={this.state.Equipment}
@@ -512,7 +549,7 @@ class DataCollection extends React.Component {
                                     onChange={this.onChangeEquipment}></FormControl></td>
                             </tr>
                             <tr>
-                                <td id="tbl-lbl"><ControlLabel>Причина сдачи: </ControlLabel></td>
+                                <td id="tbl-lbl"><ControlLabel>Причина сдачи* : </ControlLabel></td>
                                 <td id="data-label"><FormControl id="data-label"
                                     type="text"
                                     value={this.state.Breakage}
@@ -520,7 +557,7 @@ class DataCollection extends React.Component {
                                     onChange={this.onChangeBreakage}></FormControl></td>
                             </tr>
                             <tr>
-                                <td id="tbl-lbl"><ControlLabel>Дата сдачи оборудования: </ControlLabel></td>
+                                <td id="tbl-lbl"><ControlLabel>Дата сдачи оборудования* : </ControlLabel></td>
                                 <td id="data-label"><FormControl
                                     type="date"
                                     value={this.state.PutDate}
@@ -532,7 +569,7 @@ class DataCollection extends React.Component {
                     <table>
                         <tbody>
                             <tr>
-                                <td id="tbl-lbl"><ControlLabel> ФИО Мастера: </ControlLabel></td>
+                                <td id="tbl-lbl"><ControlLabel> ФИО Мастера* : </ControlLabel></td>
                                 <td id="data-label"><FormControl id="data-label"
                                     type="text"
                                     value={this.state.MasterName}
@@ -540,7 +577,7 @@ class DataCollection extends React.Component {
                                     onChange={this.onChangeMasterName}></FormControl></td>
                             </tr>
                             <tr>
-                                <td id="tbl-lbl"><ControlLabel>Табельный номер: </ControlLabel></td>
+                                <td id="tbl-lbl"><ControlLabel>Табельный номер* : </ControlLabel></td>
                                 <td id="data-label"><FormControl id="data-label"
                                     type="text"
                                     value={this.state.MasterPersonnelNumber}
@@ -548,7 +585,7 @@ class DataCollection extends React.Component {
                                     onChange={this.onChangeMasterPersonnelNumber}></FormControl></td>
                             </tr>
                             <tr>
-                                <td id="tbl-lbl"><ControlLabel>Дата выполения: </ControlLabel></td>
+                                <td id="tbl-lbl"><ControlLabel>Дата выполения* : </ControlLabel></td>
                                 <td id="data-label"><FormControl
                                     type="date"
                                     value={this.state.PerformDate}
@@ -556,13 +593,14 @@ class DataCollection extends React.Component {
                             </tr>
                         </tbody>
                     </table>
-                    <h3>Выполненные работы</h3>
+                    <h3>Выполненные работы*</h3>
                     <table>
                         <tbody>
                             {workList}
                         </tbody>
                     </table>
-                   <Button onClick={this.onAddMasterWork}>{this.state.workButtonText}</Button>
+                    <Button onClick={this.onAddMasterWork} style={{marginRight:"5px"}}>{this.state.workButtonText}</Button>
+                    <Button onClick={this.onDeleteMasterWork}>Удалить</Button>
                     <h3>Расходные материалы</h3>
                     <table className={`visible-material${this.state.materialVisible ? "" : "-none"}`}>
                         <thead>
@@ -575,11 +613,12 @@ class DataCollection extends React.Component {
                             {equipmentList}
                         </tbody>
                     </table>
-                    <Button onClick={this.onAddRepairEquipments}>{this.state.materialButtonText}</Button>
+                    <Button onClick={this.onAddRepairEquipments} style={{marginRight:"5px"}}>{this.state.materialButtonText}</Button>
+                    <Button onClick={this.onDeleteRepairEquipments}>Удалить</Button>
                     <br />
                     <br />
-                    <Button style={{ marginRight: "5px" }} onClick={this.onDatabaseSaveClick}>Сохранить</Button>
-                    <Button style={{ marginRight: "5px" }} onClick={this.onSaveClick}>Сохранить в файл</Button>
+                    <Button style={{ marginRight: "5px", marginTop: "5px" }} onClick={this.onDatabaseSaveClick}>Сохранить</Button>
+                    <Button style={{ marginRight: "5px", marginTop: "5px"  }} onClick={this.onSaveClick}>Сохранить в файл</Button>
                     <Button onClick={this.onClearClick}>Очистить форму</Button>
                     
                 </div>
