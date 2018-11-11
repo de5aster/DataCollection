@@ -39,7 +39,7 @@ namespace DataCollection.Controllers
             ClientCard deserializeClientCard;
             if (file.Length == 0)
             {
-                return this.StatusCode(411);
+                return this.StatusCode(411, "File can not be empty");
             }
 
             using (var stream = new MemoryStream())
@@ -52,9 +52,9 @@ namespace DataCollection.Controllers
             {
                 deserializeClientCard = ClientCardSerializeService.DeserializeDataFromXml(str, this.encode);
             }
-            catch (SerializeServiceException)
+            catch (SerializeServiceException ex)
             {
-                return this.StatusCode(409);
+                return this.StatusCode(409, ex.Message);
             }
 
             return this.Ok(deserializeClientCard);
@@ -70,9 +70,9 @@ namespace DataCollection.Controllers
                 var bytes = this.encode.GetBytes(xmlData);
                 return this.File(bytes, "application/otcet-stream", "client.xml");
             }
-            catch (EntitiesException)
+            catch (EntitiesException ex)
             {
-                return this.StatusCode(209);
+                return this.StatusCode(406, ex.Message);
             }
         }
 
@@ -84,9 +84,9 @@ namespace DataCollection.Controllers
             {
                 clientCard = ClientCard.ConvertToClientCard(clientCardFromBody);
             }
-            catch (EntitiesException)
+            catch (EntitiesException ex)
             {
-                return this.StatusCode(209);
+                return this.StatusCode(406, ex.Message);
             }
 
             try
@@ -94,9 +94,9 @@ namespace DataCollection.Controllers
                 this.dbService.AddClientCardWithContext(clientCard, this.context);
                 return this.Ok("Saved");
             }
-            catch (DatabaseException)
+            catch (DatabaseException ex)
             {
-                return this.StatusCode(409);
+                return this.StatusCode(208, ex.Message);
             }
         }
 

@@ -355,10 +355,10 @@ class DataCollection extends React.Component {
             if (xhr.status === 200) {
                 alert(xhr.responseText);
             }
-            if (xhr.status === 209) {
+            if (xhr.status === 406) {
                 alert("Форма заполнена некорректно");
             }
-            if (xhr.status === 409) {
+            if (xhr.status === 208) {
                 alert("Карточка с таким номером заказа уже существует. Обновите страницу.");
             }
         }
@@ -389,7 +389,7 @@ class DataCollection extends React.Component {
                 var blob = xhr.response;
                 this.saveOrOpenBlob(blob);
             }
-            if (xhr.status === 209) {
+            if (xhr.status === 406) {
                 alert("Форма заполнена некорректно");
             }
         }.bind(this);
@@ -672,8 +672,7 @@ class BtnGroup extends React.Component {
             if (res.status === 411) {
                 alert("Пустой файл. Выберите корректный файл");
             }
-            if (res.status === 409)
-            {
+            if (res.status === 409) {
                 alert("Некорректный файл. Выберите корректный файл");
             }
         }, function () {
@@ -682,13 +681,15 @@ class BtnGroup extends React.Component {
 
             });
         }).then((data) => {
-            this.setState({
-                deserializeFile: data,
-                invisible: true
-            });
+            if (data != null) {
+                this.setState({
+                    deserializeFile: data,
+                    invisible: true
+                });
+            }
         });
-
     }
+   
 
     render() {
         return (
