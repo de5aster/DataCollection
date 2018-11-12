@@ -60,8 +60,8 @@ namespace DataCollectionService.Entities
                 Breakage = client.Breakage.Trim(),
                 MasterName = client.MasterName.Trim(),
                 MasterPersonnelNumber = client.MasterPersonnelNumber.Trim(),
-                PutDate = client.PutDate,
-                PerformDate = client.PerformDate,
+                PutDate = CheckDate(client.PutDate),
+                PerformDate = CheckDate(client.PerformDate),
                 Works = ConvertToWorks(client.WorkList),
                 RepairEquipments = ConvertToRepairEquipment(client.RepairEquipments)
             };
@@ -95,6 +95,16 @@ namespace DataCollectionService.Entities
             }
 
             return repairEquips;
+        }
+
+        private static DateTime CheckDate(DateTime date)
+        {
+            if (date.Year > 3000)
+            {
+                throw new EntitiesException("Invalid year");
+            }
+
+            return date;
         }
     }
 }

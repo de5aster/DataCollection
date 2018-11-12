@@ -1,9 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Xml.Serialization;
 using DataCollectionService.Entities;
 using DataCollectionService.Exceptions;
-using System;
 
 namespace DataCollectionService.Services
 {

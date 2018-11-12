@@ -84,6 +84,52 @@ namespace DataCollectionServiceTest
                 .WithMessage("Works can not be null");
         }
 
+        [Test]
+        public void CanNotPutDateYearOverThreeThousand()
+        {
+            var clientFromBody = new ClientCardFromBody(
+                "1",
+                "Антон",
+                "ЕКБ",
+                "8",
+                "mail@mail.ru",
+                "TV",
+                "Display",
+                "Sergey",
+                "123",
+                new DateTime(3050, 01, 01),
+                new DateTime(2018, 03, 01),
+                new[] { "sr" },
+                new[] { new[] { "resistor1", "10" }, new[] { "resistor2", "15" } });
+
+            Action act = () => ClientCard.ConvertToClientCard(clientFromBody);
+            act.Should().Throw<EntitiesException>()
+                .WithMessage("Invalid year");
+        }
+
+        [Test]
+        public void CanNotPerformDateYearOverThreeThousand()
+        {
+            var clientFromBody = new ClientCardFromBody(
+                "1",
+                "Антон",
+                "ЕКБ",
+                "8",
+                "mail@mail.ru",
+                "TV",
+                "Display",
+                "Sergey",
+                "123",
+                new DateTime(2018, 01, 01),
+                new DateTime(3050, 03, 01),
+                new[] { "sr" },
+                new[] { new[] { "resistor1", "10" }, new[] { "resistor2", "15" } });
+
+            Action act = () => ClientCard.ConvertToClientCard(clientFromBody);
+            act.Should().Throw<EntitiesException>()
+                .WithMessage("Invalid year");
+        }
+
         private static void SetDefaultGuid(ClientCard client, ClientCard clientResult)
         {
             var defaultGuidId = Guid.Empty;
