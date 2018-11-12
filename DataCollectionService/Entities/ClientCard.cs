@@ -99,7 +99,7 @@ namespace DataCollectionService.Entities
 
         private static DateTime CheckDate(DateTime date)
         {
-            if (date.Year > 3000)
+            if (date.Year > 3000 || date.Year < 1900)
             {
                 throw new EntitiesException("Invalid year");
             }
