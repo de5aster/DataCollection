@@ -1,4 +1,4 @@
-﻿var { Button, FormGroup, FormControl, HelpBlock, ControlLabel, Nav, NavItem, Table, Tooltip, OverlayTrigger  } = ReactBootstrap;
+﻿var { Button, Col, Form, FormGroup, FormControl, HelpBlock, ControlLabel, Nav, NavItem, Table, Tooltip, OverlayTrigger  } = ReactBootstrap;
 
 var works = [];
 var equipments = [];
@@ -32,16 +32,17 @@ class MasterWork extends React.Component {
 
     render() {
         return (
-            <tr style={{ paddingBottom: "5px" }}>
-                <td id="tbl-lbl" style={{ paddingRight: "5px", paddingTop: "5px" }}><ControlLabel>Выполненные работы* :</ControlLabel> </td>
-                <td id="data-label" style={{ paddingTop: "5px" }}>
-                    <FormControl
+            <FormGroup validationState={this.props.validation}>
+                <Col componentClass={ControlLabel} sm={4} style={{ textAlign: "left" }}>Выполненные работы* :</Col>                
+                <Col sm={6}>
+                    <FormControl id="data-label"
                         type="text"
                         value={this.state.value}
                         onChange={this.onChange}
                         onBlur={this.onChangeValue}
-                    ></FormControl></td>
-            </tr>
+                    ></FormControl>
+                </Col>
+            </FormGroup>
             );
     }
 }
@@ -71,22 +72,22 @@ class RepairEquipment extends React.Component {
 
     render() {
         return (
-            <tr>
-                <td id="tbl-lbl" style={{ paddingRight: "5px", paddingTop:"5px" }}>
-                    <FormControl
+            <FormGroup>
+                <Col sm={7}>
+                    <FormControl id="data-label"
                         type="text"
                         value={this.state.name}
                         onChange={this.onChangeNameValue}
                         onBlur={this.onChangeValue}></FormControl>
-                </td>
-                <td id="data-label" style={{ paddingTop: "5px" }}  >
-                    <FormControl
+                </Col>
+                <Col sm={3}>
+                    <FormControl id="input-count"
                         type="number"
                         value={this.state.count}
                         onChange={this.onChangeCountValue}
                         onBlur={this.onChangeValue}></FormControl>
-                </td>
-            </tr>
+                </Col>
+            </FormGroup>
         );
     }
 }
@@ -239,6 +240,17 @@ class DataCollection extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            clientNameValidationState: "",
+            clientAddressValidationState: "",
+            phoneNumberValidationState: "",
+            emailValidationState: "",
+            equipmentValidationState: "",
+            breackageValidationState: "",
+            masterNameValidationState: "",
+            masterPersonnelNumberValidationState: "",
+            putDateValidationState: "",
+            performDateValidationState: "",
+            workListValidationState: "",
             numEquipment: 0,
             numWorkList: 0,
             ContractId: 0,
@@ -264,61 +276,72 @@ class DataCollection extends React.Component {
     onChangeClientName = (e) => {
 
         this.setState({
-            ClientName: e.target.value
+            ClientName: e.target.value,
+            clientNameValidationState: ""
         });
     }
     onChangeClientAdress = (e) => {
         this.setState({
-            ClientAddress : e.target.value
+            ClientAddress: e.target.value,
+            clientAddressValidationState: ""
         });
     }
     onChangePhoneNumber = (e) => {
         this.setState({
-            PhoneNumber : e.target.value
+            PhoneNumber: e.target.value,
+            phoneNumberValidationState: ""
         });
     }
     onChangeEmail = (e) => {
         this.setState({
-            Email : e.target.value
+            Email: e.target.value,
+            emailValidationState: ""
         });
     }
     onChangeEquipment = (e) => {
         this.setState({
-            Equipment : e.target.value
+            Equipment: e.target.value,
+            equipmentValidationState: ""
         });
     }
     onChangeBreakage = (e) => {
         this.setState({
-            Breakage : e.target.value
+            Breakage: e.target.value,
+            breackageValidationState: ""
         });
     }
     onChangePutDate = (e) => {
         this.setState({
-            PutDate : e.target.value
+            PutDate: e.target.value,
+            putDateValidationState: ""
         });
     }
     onChangeMasterName = (e) => {
         this.setState({
-            MasterName : e.target.value
+            MasterName: e.target.value,
+            masterNameValidationState:""
         });
     }
     onChangeMasterPersonnelNumber = (e) => {
         this.setState({
-            MasterPersonnelNumber : e.target.value
+            MasterPersonnelNumber: e.target.value,
+            masterPersonnelNumberValidationState:""
         });
     }
     onChangePerformDate = (e) => {
         this.setState({
-            PerformDate : e.target.value
+            PerformDate: e.target.value,
+            performDateValidationState:""
         });
-    }
-    
+    } 
+
     updateMasterWork = (value, number) => {
         if (value != null)
         {
             works[number] = value;
             this.setState({
-                WorkList: works
+                WorkList: works,
+                workListValidationState: ""
             });
         }
     }
@@ -333,6 +356,7 @@ class DataCollection extends React.Component {
         }
     }
     onDatabaseSaveClick = () => {
+        this.onCheckValid();
         var data = JSON.stringify({
             "ContractId": this.props.contractCount,
             "ClientName": this.state.ClientName,
@@ -366,6 +390,7 @@ class DataCollection extends React.Component {
     }
 
     onSaveClick = () => {
+        this.onCheckValid();
         var data = JSON.stringify({
             "ContractId": this.props.contractCount,
             "ClientName": this.state.ClientName,
@@ -384,7 +409,7 @@ class DataCollection extends React.Component {
         var xhr = new XMLHttpRequest();
         xhr.open("post", this.props.apiUrlSave, true);
         xhr.setRequestHeader("Content-type", "application/json");
-        xhr.onload = function () { 
+        xhr.onload = function () {
             if (xhr.status === 200) {
                 var blob = xhr.response;
                 this.saveOrOpenBlob(blob);
@@ -393,8 +418,9 @@ class DataCollection extends React.Component {
                 alert("Форма заполнена некорректно");
             }
         }.bind(this);
-        xhr.send(data);        
-    }
+        xhr.send(data);
+    }  
+ 
     saveOrOpenBlob = (blob) => {
         var data = new Blob([blob], { type: "text/xml" }),        
             fileUrl = window.URL.createObjectURL(data),
@@ -412,15 +438,14 @@ class DataCollection extends React.Component {
     }
 
     onDeleteMasterWork = () => {
-        if (this.state.numWorkList > 0)
+        if (this.state.numWorkList > 1)
         {
             var index = this.state.numWorkList - 1;
             var works = this.state.WorkList; 
             works.splice(index, 1);
-        }
-        if (this.state.numWorkList == 1)
+        } else
         {
-            var index = 0;         
+            var index = 0;
             var works = [];
         }
         this.setState({
@@ -437,13 +462,13 @@ class DataCollection extends React.Component {
     }
 
     onDeleteRepairEquipments = () => {
-        if (this.state.numEquipment > 0) {
+        if (this.state.numEquipment > 1) {
             var index = this.state.numEquipment - 1;
             var equips = this.state.RepairEquipments;
             var visible = true;
             equips.splice(index, 1);
-        }
-        if (this.state.numEquipment == 1) {
+        } else
+        {
             var index = 0;
             var equips = [];
             var visible = false;
@@ -478,11 +503,71 @@ class DataCollection extends React.Component {
             materialButtonText: "Добавить материал"
         });
     }
-
+    onCheckValid = () => {
+        let clientNameValid = "";
+        let clientAddressValid = "";
+        let phoneNumberValid = "";
+        let emailValid = "";
+        let equipmentValid = "";
+        let breackageValid = "";
+        let masterNameValid = "";
+        let masterPersonnelNumberValid = "";
+        let putDateValid = "";
+        let performDateValid = "";
+        let worksValid = "";
+        if (this.state.ClientName.length === 0) {
+            clientNameValid = "error";           
+        }
+        if (this.state.ClientAddress.length === 0) {
+            clientAddressValid = "error";
+        }
+        if (this.state.PhoneNumber.length === 0) {
+            phoneNumberValid = "error";
+        }
+        if (this.state.Email.length === 0) {
+            emailValid = "error";
+        }
+        if (this.state.Equipment.length === 0) {
+            equipmentValid = "error";
+        }
+        if (this.state.Breakage.length === 0) {
+            breackageValid = "error";
+        }
+        if (this.state.PutDate.length != 10) {
+            putDateValid = "error";
+        }
+        if (this.state.PerformDate.length != 10)
+        {
+            performDateValid = "error";
+        }
+        if (this.state.MasterName.length === 0)
+        {
+            masterNameValid = "error";
+        }
+        if (this.state.MasterPersonnelNumber.length === 0) {
+            masterPersonnelNumberValid = "error";
+        }
+        if (this.state.WorkList.length === 0) {
+            worksValid = "error";
+        }
+        this.setState({
+            clientNameValidationState: clientNameValid,
+            clientAddressValidationState: clientAddressValid,
+            phoneNumberValidationState: phoneNumberValid, 
+            emailValidationState: emailValid,
+            equipmentValidationState: equipmentValid,
+            breackageValidationState: breackageValid,
+            masterNameValidationState: masterNameValid,
+            masterPersonnelNumberValidationState: masterPersonnelNumberValid,
+            putDateValidationState: putDateValid,
+            performDateValidationState: performDateValid,
+            workListValidationState: worksValid
+        })
+    }
     render() {
         const workList = [];
         for (var i = 0; i < this.state.numWorkList; i += 1) {
-            workList.push(<MasterWork key={i} number={i} updateMasterWork={this.updateMasterWork}/>);
+            workList.push(<MasterWork key={i} number={i} updateMasterWork={this.updateMasterWork} validation={this.state.workListValidationState}/>);
         }
         const equipmentList = [];
         for (var i = 0; i < this.state.numEquipment; i += 1) {
@@ -495,124 +580,136 @@ class DataCollection extends React.Component {
         );
         return (
             <div className={`visible${this.props.addVisible ? "" : "_none"}`} style={{ paddingLeft: "30px" }}>
-                <div>
-                    <h3>Информация о клиенте</h3>
-                    <br />
+                <div style={{maxWidth: "600px"}}>
+                    <h3>Информация о заказчике</h3>
                     <p> * отмечены обязательные поля</p>
-                    <table>
-                        <tbody>
-                        <tr>
-                            <td id="tbl-lbl"><ControlLabel>Номер заказа: </ControlLabel></td>
-                            <td style={{ maxWidth: "25px" }}>
-                                <OverlayTrigger placement="right" overlay={tooltip}>
-                                    <label style = {{paddingRight:"5px"}}>{this.props.contractCount}</label>
-                                </OverlayTrigger></td>
-                        </tr>
-                            <tr>
-                                <td id="tbl-lbl"><ControlLabel>ФИО заказчика* : </ControlLabel></td>
-                                <td id="data-label"><FormControl id="data-label"
+                    <Form horizontal>
+                        <FormGroup>
+                            <Col componentClass={ControlLabel} sm={4} style={{ textAlign: "left", paddingTop: "0px" }}>Номер заказа : </Col>  
+                            <Col sm={6}>
+                        <OverlayTrigger placement="right" overlay={tooltip}>
+                            <label style = {{paddingRight:"5px"}}>{this.props.contractCount}</label>
+                        </OverlayTrigger>  
+                            </Col>
+                        </FormGroup>
+                        <FormGroup validationState={this.state.clientNameValidationState}>
+                            <Col componentClass={ControlLabel} sm={4} style={{ textAlign: "left" }}>ФИО заказчика* : </Col>
+                            <Col sm={6}>
+                                <FormControl id="data-label"
                                     type="text"
                                     value={this.state.ClientName}
                                     placeholder = "Введите значение"
-                                    onChange={this.onChangeClientName}></FormControl></td>
-                            </tr>
-                            <tr>
-                                <td id="tbl-lbl"> <ControlLabel>Адрес проживания* : </ControlLabel></td>
-                                <td id="data-label"> <FormControl id="data-label"
-                                    type = "text"
-                                    value={this.state.ClientAddress}
-                                    placeholder="Введите значение"
-                                    onChange={this.onChangeClientAdress}></FormControl></td>
-                            </tr>
-                            <tr>
-                                <td id="tbl-lbl"><ControlLabel>Контактный телефон* : </ControlLabel></td>
-                                <td id="data-label"><FormControl id="data-label"
-                                    type="tel"
-                                    value={this.state.PhoneNumber}
-                                    placeholder="Введите значение"
-                                    onChange={this.onChangePhoneNumber}></FormControl></td>
-                            </tr>
-                            <tr>
-                                <td id="tbl-lbl"><ControlLabel>Почта: </ControlLabel></td>
-                                <td id="data-label"><FormControl id="data-label"
-                                    type="email"
-                                    value = {this.state.Email}
-                                    placeholder="Введите значение"
-                                    onChange={this.onChangeEmail}></FormControl></td>
-                            </tr>
-                            <tr>
-                                <td id="tbl-lbl"> <ControlLabel>Оборудование* : </ControlLabel></td>
-                                <td id="data-label"><FormControl id="data-label"
-                                    type="text"
-                                    value={this.state.Equipment}
-                                    placeholder="Введите значение"
-                                    onChange={this.onChangeEquipment}></FormControl></td>
-                            </tr>
-                            <tr>
-                                <td id="tbl-lbl"><ControlLabel>Причина сдачи* : </ControlLabel></td>
-                                <td id="data-label"><FormControl id="data-label"
+                                    onChange={this.onChangeClientName}></FormControl>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup validationState={this.state.clientAddressValidationState}>
+                            <Col componentClass={ControlLabel} sm={4} style={{ textAlign: "left" }}>Адрес проживания* : </Col>
+                            <Col sm={6}>
+                                <FormControl id="data-label"
+                                        type = "text"
+                                        value={this.state.ClientAddress}
+                                        placeholder="Введите значение"
+                                        onChange={this.onChangeClientAdress}></FormControl>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup validationState={this.state.phoneNumberValidationState}>
+                            <Col componentClass={ControlLabel} sm={4} style={{ textAlign: "left" }}>Контактный телефон* : </Col>
+                            <Col sm={6}>
+                                <FormControl id="data-label"
+                                        type="tel"
+                                        value={this.state.PhoneNumber}
+                                        placeholder="Введите значение"
+                                        onChange={this.onChangePhoneNumber}></FormControl>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup validationState={this.state.emailValidationState}>
+                            <Col componentClass={ControlLabel} sm={4} style={{ textAlign: "left" }}>Почта: </Col>
+                            <Col sm={6}>
+                                <FormControl id="data-label"
+                                        type="email"
+                                        value = {this.state.Email}
+                                        placeholder="Введите значение"
+                                        onChange={this.onChangeEmail}></FormControl>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup validationState={this.state.equipmentValidationState}>
+                            <Col componentClass={ControlLabel} sm={4} style={{ textAlign: "left" }}>Оборудование* : </Col>
+                            <Col sm={6}>
+                                <FormControl id="data-label"
+                                        type="text"
+                                        value={this.state.Equipment}
+                                        placeholder="Введите значение"
+                                        onChange={this.onChangeEquipment}></FormControl>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup validationState={this.state.breackageValidationState}>
+                            <Col componentClass={ControlLabel} sm={4} style={{ textAlign: "left" }}>Причина сдачи* : </Col>
+                            <Col sm={6}> <FormControl id="data-label"
                                     type="text"
                                     value={this.state.Breakage}
                                     placeholder="Введите значение"
-                                    onChange={this.onChangeBreakage}></FormControl></td>
-                            </tr>
-                            <tr>
-                                <td id="tbl-lbl"><ControlLabel>Дата сдачи оборудования* : </ControlLabel></td>
-                                <td id="data-label"><FormControl
+                                    onChange={this.onChangeBreakage}></FormControl>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup validationState={this.state.putDateValidationState}>
+                            <Col componentClass={ControlLabel} sm={4} style={{ textAlign: "left" }}>Дата сдачи* : </Col>
+                            <Col sm={6}>
+                                <FormControl id="date-label"
                                     type="date"
                                     value={this.state.PutDate}
-                                    onChange={this.onChangePutDate}></FormControl></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h3>Информация о работах</h3>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td id="tbl-lbl"><ControlLabel> ФИО Мастера* : </ControlLabel></td>
-                                <td id="data-label"><FormControl id="data-label"
+                                    onChange={this.onChangePutDate}></FormControl>
+                            </Col>
+                        </FormGroup>
+                    </Form>
+                    <h3>Информация об исполнителе</h3>
+                    <Form horizontal>
+                        <FormGroup validationState={this.state.masterNameValidationState}>
+                            <Col componentClass={ControlLabel} sm={4} style={{ textAlign: "left" }}> ФИО Мастера* : </Col>
+                            <Col sm={6}>
+                                <FormControl id="data-label"
                                     type="text"
                                     value={this.state.MasterName}
                                     placeholder="Введите значение"
-                                    onChange={this.onChangeMasterName}></FormControl></td>
-                            </tr>
-                            <tr>
-                                <td id="tbl-lbl"><ControlLabel>Табельный номер* : </ControlLabel></td>
-                                <td id="data-label"><FormControl id="data-label"
-                                    type="text"
-                                    value={this.state.MasterPersonnelNumber}
-                                    placeholder="Введите значение"
-                                    onChange={this.onChangeMasterPersonnelNumber}></FormControl></td>
-                            </tr>
-                            <tr>
-                                <td id="tbl-lbl"><ControlLabel>Дата выполения* : </ControlLabel></td>
-                                <td id="data-label"><FormControl
+                                    onChange={this.onChangeMasterName}></FormControl>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup validationState={this.state.masterPersonnelNumberValidationState}>
+                            <Col componentClass={ControlLabel} sm={4} style={{ textAlign: "left" }}>Табельный номер* : </Col>
+                            <Col sm={6}>
+                                <FormControl id="data-label"
+                                type="text"
+                                value={this.state.MasterPersonnelNumber}
+                                placeholder="Введите значение"
+                                onChange={this.onChangeMasterPersonnelNumber}></FormControl>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup validationState={this.state.performDateValidationState}>
+                            <Col componentClass={ControlLabel} sm={4} style={{ textAlign: "left" }}>Дата выполения* : </Col>
+                            <Col sm={6}>
+                                <FormControl id="date-label"
                                     type="date"
                                     value={this.state.PerformDate}
-                                    onChange={this.onChangePerformDate}></FormControl></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h3>Выполненные работы*</h3>
-                    <table>
-                        <tbody>
-                            {workList}
-                        </tbody>
-                    </table>
-                    <Button onClick={this.onAddMasterWork} style={{marginRight:"5px"}}>{this.state.workButtonText}</Button>
+                                    onChange={this.onChangePerformDate}></FormControl>
+                            </Col>
+                        </FormGroup>
+                    </Form>
+
+                    <h3 className={this.state.workListValidationState}>Выполненные работы*</h3>
+                    <Form horizontal>                        
+                        {workList}
+                    </Form>
+                    <Button onClick={this.onAddMasterWork} style={{ marginRight: "5px" }}>{this.state.workButtonText}</Button>
                     <Button onClick={this.onDeleteMasterWork}>Удалить</Button>
                     <h3>Расходные материалы</h3>
-                    <table className={`visible-material${this.state.materialVisible ? "" : "-none"}`}>
-                        <thead>
-                            <tr>
-                                <td>Материал</td>
-                                <td>Количество</td>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div className={`visible-material${this.state.materialVisible ? "" : "-none"}`}>
+                        <Form horizontal>
+                            <FormGroup>
+                                <Col componentClass={ControlLabel} sm={7} style={{ textAlign: "left" }}>Материал</Col>
+                                <Col componentClass={ControlLabel} sm={3} style={{ textAlign: "left" }}>Количество </Col>
+                            </FormGroup>                        
                             {equipmentList}
-                        </tbody>
-                    </table>
+                        </Form>
+                    </div>
                     <Button onClick={this.onAddRepairEquipments} style={{marginRight:"5px"}}>{this.state.materialButtonText}</Button>
                     <Button onClick={this.onDeleteRepairEquipments}>Удалить</Button>
                     <br />
@@ -688,8 +785,7 @@ class BtnGroup extends React.Component {
                 });
             }
         });
-    }
-   
+    }  
 
     render() {
         return (
@@ -705,7 +801,7 @@ class BtnGroup extends React.Component {
                     </FormGroup>
                     <Button type="submit" disabled={!this.state.file}>Загрузить</Button>
                     <div className={`visible${this.state.invisible ? "" : "_none"}`}>
-                        <h3>Информация о клиенте</h3>
+                        <h3>Информация о заказчике</h3>
                         <table>
                             <tbody>
                             <tr>
@@ -737,16 +833,16 @@ class BtnGroup extends React.Component {
                                     <td>{this.state.deserializeFile.breakage}</td>
                                 </tr>
                                 <tr>
-                                    <td><label>Дата сдачи оборудования: </label></td>
+                                    <td><label>Дата сдачи: </label></td>
                                     <td>{this.state.deserializeFile.putDate.slice(0,10)}</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <h3>Информация о работах</h3>
+                        <h3>Информация об исполнителе</h3>
                         <table>
                             <tbody>
                                 <tr>
-                                    <td id="tbl-lbl"><label> ФИО Мастера: </label></td>
+                                    <td id="tbl-lbl"><label> ФИО застера: </label></td>
                                     <td>{this.state.deserializeFile.masterName}</td>
                                 </tr>
                                 <tr>
@@ -766,7 +862,7 @@ class BtnGroup extends React.Component {
                             this.state.deserializeFile.works.map((item,index) => {
                                 return (
                                     <tr>
-                                        <td>{index +1}. </td>
+                                        <td style={{paddingRight: "15px"}}>{index +1}.</td>
                                         <td>{item.name}</td>
                                     </tr>
                                 )})
@@ -789,7 +885,7 @@ class BtnGroup extends React.Component {
                                     
                                         <tr id="item">
                                             <td id="number">{index + 1}. </td>
-                                            <td style={{marginRight:"10px" }}>{item.name}</td>
+                                            <td>{item.name}</td>
                                             <td>{item.count} шт.</td>
                                         </tr>
                                     );

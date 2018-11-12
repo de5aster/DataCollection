@@ -17,6 +17,12 @@
     min-width: 300px;
     padding-top: 5px;
 }
+#date-label {
+    max-width:150px;
+}
+#input-count {
+    min-width: 140px;
+}
 #tbl-lbl {
     min-width: 200px;
     padding-right: 5px;
@@ -33,37 +39,13 @@ input[type=date] {
 .visible_none {
     display: none;
 }
-.top-button {
-    position: relative;
-    display: inline-block;
-    margin-right: 5px;
-    line-height: 2em;
-    vertical-align: middle;
-    text-align: center;
-    text-decoration: none;
-    color: #000;
-    outline: none;
-    border-radius: 5px;
-    box-shadow: 0 0 0 1px #ddd inset, 0 1px 1px #fff;
-}
-.top-button:hover {
-    background: #dcdcdc linear-gradient(#fff, #dcdcdc);
-    box-shadow: 0 0 0 1px #aaa inset, 0 1px 1px #aaa;
-}
-.top-button:active {
-    background: none;
-    box-shadow: 0 0 0 1px #bbb inset, 0 1px 3px rgba(0,0,0,.5) inset, 0 1px 2px #fff;
-}
 
-.material-table td {
-    min-width: 100px;
+.material-table td{
+    padding-right: 10px;
 }
-.material-table #item td{
-    width: 100px;
-
-}
-td #number {
+#number {
     max-width: 30px;
+    
 }
 
 .visible-material {
@@ -78,3 +60,7 @@ td #number {
 td {
     padding: 3px;
 }
+.error {
+    color: #a94442;
+}
+
